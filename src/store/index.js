@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import categories from './modules/categories'
 import subcategories from './modules/subcategories'
 import expenses from './modules/expenses'
+import incomes from './modules/incomes'
 
 import { state, mutations } from './default'
 
@@ -13,6 +14,7 @@ const store = new Vuex.Store({
     categories,
     subcategories,
     expenses,
+    incomes,
   },
   state,
   mutations,

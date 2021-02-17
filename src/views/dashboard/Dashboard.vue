@@ -224,9 +224,9 @@
       >
         <base-material-stats-card
           color="green"
-          icon="mdi-twitter"
+          icon="mdi-arrow-top-right"
           title="Receita"
-          value="+245"
+          value="+245 "
           sub-icon="mdi-clock"
           sub-text="Just Updated"
         />
@@ -334,11 +334,21 @@
 </template>
 
 <script>
+  import { VMoney } from 'v-money'
+  import { mapActions, mapState, mapMutations, mapGetters } from 'vuex'
+
   export default {
     // name: 'DashboardDashboard',
 
     data () {
       return {
+        money: {
+          decimal: ',',
+          thousands: '.',
+          precision: 2,
+          masked: false,
+        },
+
         dailySalesChart: {
           data: {
             labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -533,7 +543,27 @@
       }
     },
 
+    directives: { money: VMoney },
+
+    computed: {
+      ...mapState({
+
+      }),
+    },
+
     methods: {
+      ...mapActions([
+
+      ]),
+
+      ...mapMutations([
+
+      ]),
+
+      ...mapGetters([
+
+      ]),
+
       complete (index) {
         this.list[index] = !this.list[index]
       },

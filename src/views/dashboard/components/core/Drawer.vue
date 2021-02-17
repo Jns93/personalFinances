@@ -121,8 +121,8 @@
         },
         {
           icon: 'mdi-arrow-top-right',
-          title: 'Receita',
-          to: '/pages/user',
+          title: 'Receitas',
+          to: '/pages/receitas',
         },
         {
           title: 'Despesas',
