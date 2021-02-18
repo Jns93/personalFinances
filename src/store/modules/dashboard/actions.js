@@ -1,38 +1,30 @@
 import Vue from 'vue'
 export default {
-  getIncomesByMonth ({ commit }, params) {
+  getTotalIncomesByMonth ({ commit }, params) {
     commit('SET_PRELOADER', true)
-    return Vue.prototype.$http('/incomes/byMonth', { params })
-                        .then(response => commit('SET_INCOMES_IN_STATE', response.data))
+    return Vue.prototype.$http('/dashboard/incomes/amount-total', { params })
+                        .then(response => commit('SET_TOTAL_AMOUNT_INCOMES_IN_STATE', response.data))
+                        // .finally(() => commit('SET_PRELOADER', false))
+  },
+
+  getTotalExpensesByMonth ({ commit }, params) {
+    commit('SET_PRELOADER', true)
+    return Vue.prototype.$http('/dashboard/expenses/amount-total', { params })
+                        .then(response => commit('SET_TOTAL_AMOUNT_EXPENSES_IN_STATE', response.data))
+                        // .finally(() => commit('SET_PRELOADER', false))
+  },
+
+  getPercentageOfSavingsByMonth ({ commit }, params) {
+    commit('SET_PRELOADER', true)
+    return Vue.prototype.$http('/dashboard/percent-of-savings', { params })
+                        .then(response => commit('SET_PERCENT_OF_SAVING_IN_STATE', response.data))
+                        // .finally(() => commit('SET_PRELOADER', false))
+  },
+
+  getBalanceByMonth ({ commit }, params) {
+    commit('SET_PRELOADER', true)
+    return Vue.prototype.$http('/dashboard/balance', { params })
+                        .then(response => commit('SET_BALANCE_IN_STATE', response.data))
                         .finally(() => commit('SET_PRELOADER', false))
-  },
-
-  storeIncome ({ commit }, params) {
-    commit('SET_PRELOADER', true)
-    return Vue.prototype.$http.post('/incomes/store', params)
-                              .catch(error => {
-                                console.log('error', error)
-                              })
-                              .finally(() => commit('SET_PRELOADER', false))
-  },
-
-  deleteIncome ({ commit }, params) {
-    commit('SET_PRELOADER', true)
-    return Vue.prototype.$http.delete('/incomes/delete', { data: { id: params.id } })
-                              .then(response => commit('DELETE_INCOME_FROM_STATE', response.data.data))
-                              .finally(() => commit('SET_PRELOADER', false))
-  },
-
-  actionPayIncomesSelected ({ commit }, params) {
-    commit('SET_PRELOADER', true)
-    return Vue.prototype.$http.put('/incomes/pay', params)
-                              .then(commit('UPDATE_INCOME_STATUS_IN_STATE', params))
-                              .finally(() => commit('SET_PRELOADER', false))
-  },
-
-  updateIncome ({ commit }, params) {
-    commit('SET_PRELOADER', true)
-    return Vue.prototype.$http.put('/incomes/update', params)
-                              .finally(() => commit('SET_PRELOADER', false))
   },
 }

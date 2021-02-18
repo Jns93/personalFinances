@@ -3,7 +3,106 @@
     id="dashboard"
     fluid
     tag="section"
+    v-if="!loading"
   >
+<!-- CONTROLES MÊS E ANO -->
+    <v-row
+      justify="center"
+    >
+      <v-btn
+        class="mr-5"
+        icon
+        @click.prevent="prev"
+      >
+        <v-icon large>
+          mdi-chevron-left
+        </v-icon>
+      </v-btn>
+      <h2
+       class="font-weight-regular mt-1"
+       v-for="(item) in dashboard.months"
+       :key="item.id"
+       >
+        {{ item[month-1].name }} {{ year }}
+      </h2>
+      <v-btn
+        class="ml-5"
+        icon
+        @click.prevent="next"
+      >
+        <v-icon large>
+          mdi-chevron-right
+        </v-icon>
+      </v-btn>
+    </v-row>
+
+<!-- INDICADORES DO MÊS -->
+    <p class="font-weight-thin mb-0 mt-6">
+      Indicadores do mês
+    </p>
+
+    <v-row>
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="green"
+          icon="mdi-arrow-top-right"
+          title="Receita"
+          :value="applyFilterVmoney(dashboard.totalAmountIncomes)"
+          sub-icon="mdi-clock"
+          sub-text="Just Updated"
+        />
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="red"
+          icon="mdi-poll"
+          title="Despesas"
+          :value="applyFilterVmoney(dashboard.totalAmountExpenses)"
+          sub-icon="mdi-tag"
+          sub-text="Tracked from Google Analytics"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="info"
+          icon="mdi-store"
+          title="Percentual econômico"
+          :value="dashboard.percentOfSaving + '%'"
+          sub-icon="mdi-calendar"
+          sub-text="Limite"
+        />
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="orange"
+          icon="mdi-sofa"
+          title="Saldo"
+          :value="applyFilterVmoney(dashboard.balance)"
+          sub-icon="mdi-alert"
+          sub-icon-color="red"
+          sub-text="Get More Space..."
+        />
+      </v-col>
+    </v-row>
+<!-- INDICADORES DO ANO E AVISOS-->
     <p class="font-weight-thin mb-0">
       Indicadores do ano
     </p>
@@ -210,75 +309,7 @@
           </template>
         </base-material-chart-card>
       </v-col>
-    </v-row>
-
-    <p class="font-weight-thin mb-0 mt-6">
-      Indicadores do mês
-    </p>
-
-    <v-row>
-      <v-col
-        cols="12"
-        sm="6"
-        lg="3"
-      >
-        <base-material-stats-card
-          color="green"
-          icon="mdi-arrow-top-right"
-          title="Receita"
-          value="+245 "
-          sub-icon="mdi-clock"
-          sub-text="Just Updated"
-        />
-      </v-col>
-
-      <v-col
-        cols="12"
-        sm="6"
-        lg="3"
-      >
-        <base-material-stats-card
-          color="red"
-          icon="mdi-poll"
-          title="Despesas"
-          value="75.521"
-          sub-icon="mdi-tag"
-          sub-text="Tracked from Google Analytics"
-        />
-      </v-col>
-
-      <v-col
-        cols="12"
-        sm="6"
-        lg="3"
-      >
-        <base-material-stats-card
-          color="info"
-          icon="mdi-store"
-          title="Percentual econômico"
-          value="30 %"
-          sub-icon="mdi-calendar"
-          sub-text="Limite"
-        />
-      </v-col>
-
-      <v-col
-        cols="12"
-        sm="6"
-        lg="3"
-      >
-        <base-material-stats-card
-          color="orange"
-          icon="mdi-sofa"
-          title="Saldo"
-          value="184"
-          sub-icon="mdi-alert"
-          sub-icon-color="red"
-          sub-text="Get More Space..."
-        />
-      </v-col>
-
-      <v-col
+            <v-col
         cols="12"
         md="6"
       >
@@ -331,11 +362,40 @@
       </v-col>
     </v-row>
   </v-container>
+    <v-container
+      v-else
+    >
+      <v-skeleton-loader
+        v-bind="attrs"
+        type="article, actions"
+      ></v-skeleton-loader>
+      <v-skeleton-loader
+        v-bind="attrs"
+        type="article"
+      ></v-skeleton-loader>
+      <v-skeleton-loader
+        v-bind="attrs"
+        type="card-avatar"
+      ></v-skeleton-loader>
+      <v-skeleton-loader
+        v-bind="attrs"
+        type="article"
+      ></v-skeleton-loader>
+      <v-skeleton-loader
+        v-bind="attrs"
+        type="actions"
+      ></v-skeleton-loader>
+      <v-skeleton-loader
+        v-bind="attrs"
+        type="article"
+      ></v-skeleton-loader>
+    </v-container>
 </template>
 
 <script>
   import { VMoney } from 'v-money'
   import { mapActions, mapState, mapMutations, mapGetters } from 'vuex'
+  import moment from 'moment'
 
   export default {
     // name: 'DashboardDashboard',
@@ -348,7 +408,12 @@
           precision: 2,
           masked: false,
         },
-
+        // totalAmountIncomes2: 0,
+        // totalAmountExpenses2: 0,
+        // percentOfSaving2: 0,
+        // balance2: 0,
+        month: 1,
+        year: 2021,
         dailySalesChart: {
           data: {
             labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -547,13 +612,29 @@
 
     computed: {
       ...mapState({
-
+        dashboard: state => state.dashboard,
+        totalAmountIncomes: state => state.totalAmountIncomes,
+        totalAmountExpenses: state => state.totalAmountExpenses,
+        percentOfSaving: state => state.percentOfSaving,
+        balance: state => state.balance,
+        loading: state => state.preloader,
       }),
+    },
+
+    created () {
+      this.setDateToday()
+      this.getTotalExpensesByMonthFromState()
+      this.getTotalIncomesByMonthFromState()
+      this.getPercentageOfSavingsByMonthFromState()
+      this.getBalanceByMonthFromState()
     },
 
     methods: {
       ...mapActions([
-
+        'getTotalIncomesByMonth',
+        'getTotalExpensesByMonth',
+        'getPercentageOfSavingsByMonth',
+        'getBalanceByMonth',
       ]),
 
       ...mapMutations([
@@ -563,6 +644,83 @@
       ...mapGetters([
 
       ]),
+
+      resetAllState () {
+        console.log('reset state', this.dashboard.balance)
+        this.dashboard.balance = null
+      },
+
+      setDateToday () {
+        const date = new Date()
+
+        this.year = date.getFullYear()
+        this.month = date.getMonth() + 1
+      },
+
+      formatDateYearMonthFromApi () {
+        var date = moment(this.year + '-' + this.month).format('YYYY-MM')
+        return date
+      },
+
+      prev () {
+        this.month--
+        if (this.month === 0) {
+          this.month = 12
+          this.year--
+        }
+        // this.getExpensesByMonthFromState()
+      },
+      next () {
+        this.month++
+        if (this.month === 13) {
+          this.month = 1
+          this.year++
+        }
+        // this.getExpensesByMonthFromState()
+      },
+
+      applyFilterVmoney (value) {
+        return this.$options.filters.money(value)
+      },
+
+      getTotalIncomesByMonthFromState () {
+        const monthYear = this.formatDateYearMonthFromApi()
+        const params = {
+          due_date: monthYear,
+        }
+
+        this.getTotalIncomesByMonth(params)
+        this.totalAmountIncomes = this.dashboard.totalAmountIncomes
+      },
+
+      getTotalExpensesByMonthFromState () {
+        const monthYear = this.formatDateYearMonthFromApi()
+        const params = {
+          due_date: monthYear,
+        }
+
+        this.getTotalExpensesByMonth(params)
+        this.totalAmountExpenses = this.dashboard.totalAmountExpenses
+      },
+
+      getPercentageOfSavingsByMonthFromState () {
+        const monthYear = this.formatDateYearMonthFromApi()
+        const params = {
+          due_date: monthYear,
+        }
+
+        this.getPercentageOfSavingsByMonth(params)
+        this.percentOfSaving = this.dashboard.percentOfSaving
+      },
+
+      getBalanceByMonthFromState () {
+        const monthYear = this.formatDateYearMonthFromApi()
+        const params = {
+          due_date: monthYear,
+        }
+
+        this.getBalanceByMonth(params)
+      },
 
       complete (index) {
         this.list[index] = !this.list[index]

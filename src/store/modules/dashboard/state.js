@@ -1,8 +1,4 @@
 export default {
-  expenses: {
-    data: [],
-  },
-
   months: {
     data: [
       { id: 1, name: 'Janeiro' },
@@ -18,5 +14,17 @@ export default {
       { id: 11, name: 'Novembro' },
       { id: 12, name: 'Dezembro' },
     ],
+  },
+
+  totalAmountIncomes: {
+  },
+
+  totalAmountExpenses: {
+  },
+
+  percentOfSaving: {
+  },
+
+  balance: {
   },
 }
