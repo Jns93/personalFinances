@@ -14,4 +14,12 @@ export default {
   SET_BALANCE_IN_STATE (state, balance) {
     state.balance = balance
   },
+
+  SET_BALANCE_GOAL_BY_MONTH_IN_STATE (state, balanceGoal) {
+    state.balanceGoal = balanceGoal
+  },
+
+  SET_AVERAGE_INCOMES_BY_YEAR_IN_STATE (state, averageIncomes) {
+    state.averageIncomes = averageIncomes
+  },
 }

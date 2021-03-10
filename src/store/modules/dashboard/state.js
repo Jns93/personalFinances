@@ -27,4 +27,12 @@ export default {
 
   balance: {
   },
+
+  balanceGoal: {
+
+  },
+
+  averageIncomes: {
+
+  },
 }
