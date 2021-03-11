@@ -22,4 +22,13 @@ export default {
   SET_AVERAGE_INCOMES_BY_YEAR_IN_STATE (state, averageIncomes) {
     state.averageIncomes = averageIncomes
   },
+
+  SET_AVERAGE_EXPENSES_BY_YEAR_IN_STATE (state, averageExpenses) {
+    state.averageExpenses = averageExpenses
+  },
+
+  SET_AVERAGE_PERCENT_OF_SAVING_BY_YEAR_IN_STATE (state, averagePercentOfSaving) {
+    state.averagePercentOfSaving = averagePercentOfSaving
+  },
+  
 }

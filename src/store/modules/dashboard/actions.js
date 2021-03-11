@@ -37,8 +37,22 @@ export default {
 
   getAverageIncomesByYear ({ commit }, params) {
     commit('SET_PRELOADER', true)
-    return Vue.prototype.$http('/dashboard/incomes/average-income-by-Year', { params })
+    return Vue.prototype.$http('/dashboard/incomes/average-incomes-by-Year', { params })
                         .then(response => commit('SET_AVERAGE_INCOMES_BY_YEAR_IN_STATE', response.data))
+                        .finally(() => commit('SET_PRELOADER', false))
+  },
+
+  getAverageExpensesByYear ({ commit }, params) {
+    commit('SET_PRELOADER', true)
+    return Vue.prototype.$http('/dashboard/expenses/average-expenses-by-Year', { params })
+                        .then(response => commit('SET_AVERAGE_EXPENSES_BY_YEAR_IN_STATE', response.data))
+                        .finally(() => commit('SET_PRELOADER', false))
+  },
+
+  getAveragePercentOfSavingByYear ({ commit }, params) {
+    commit('SET_PRELOADER', true)
+    return Vue.prototype.$http('/dashboard/average-percent-of-saving-by-Year', { params })
+                        .then(response => commit('SET_AVERAGE_PERCENT_OF_SAVING_BY_YEAR_IN_STATE', response.data))
                         .finally(() => commit('SET_PRELOADER', false))
   },
 }

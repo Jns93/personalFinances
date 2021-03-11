@@ -35,4 +35,12 @@ export default {
   averageIncomes: {
 
   },
+
+  averageExpenses: {
+
+  },
+
+  averagePercentOfSaving: {
+
+  },
 }

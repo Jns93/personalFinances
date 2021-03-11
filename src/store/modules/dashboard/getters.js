@@ -20,4 +20,11 @@ export default {
   averageIncomes: (state) => {
     return state.averageIncomes
   },
+  averageExpenses: (state) => {
+    return state.averageExpenses
+  },
+  averagePercentOfSaving: (state) => {
+    return state.averagePercentOfSaving
+  },
+
 }

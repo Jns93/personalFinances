@@ -1,5 +1,6 @@
 <template>
   <v-container id="dashboard" fluid tag="section" v-if="!loading">
+
     <!-- CONTROLES MÊS E ANO -->
     <v-row justify="center">
       <v-btn class="mr-5" icon @click.prevent="prev">
@@ -42,7 +43,10 @@
           title="Despesas"
           :value="applyFilterVmoney(totalAmountExpenses)"
           sub-icon="mdi-information-variant"
-          sub-text="Média de despesas por mês:"
+          :sub-text="
+            'Média de despesas por mês: ' +
+            applyFilterVmoney(averageExpenses)
+          "
         />
       </v-col>
       <v-col cols="12" sm="6" lg="3">
@@ -52,7 +56,10 @@
           title="Percentual econômico"
           :value="percentOfSaving + '%'"
           sub-icon="mdi-bullseye-arrow"
-          :sub-text="'Objetivo: 30%'"
+          :sub-text="
+            'Percentual de econômia médio: ' +
+            averagePercentOfSaving + '%'
+          "
         />
       </v-col>
 
@@ -238,7 +245,23 @@
       </v-col>
     </v-row>
   </v-container>
-  <v-container v-else>
+  <v-container id="dashboard" fluid tag="section" v-else>
+    <div class="text-center">
+      <v-progress-circular
+        indeterminate
+        color="grey"
+        size="50"
+      ></v-progress-circular>
+      <h1 class="mt-3">Carregando...</h1>
+    </div>
+  </v-container>
+  <!-- <v-container v-else>
+    <div class="text-center">
+      <v-progress-circular
+        indeterminate
+        color="grey"
+      ></v-progress-circular>
+    </div>
     <v-skeleton-loader
       v-bind="attrs"
       type="article, actions"
@@ -248,7 +271,8 @@
     <v-skeleton-loader v-bind="attrs" type="article"></v-skeleton-loader>
     <v-skeleton-loader v-bind="attrs" type="actions"></v-skeleton-loader>
     <v-skeleton-loader v-bind="attrs" type="article"></v-skeleton-loader>
-  </v-container>
+  </v-container> -->
+
 </template>
 
 <script>
@@ -492,39 +516,25 @@ export default {
     this.getBalanceByMonthFromState();
     this.getBalanceGoalByMonthFromState();
     this.getAverageIncomesByYearFromState();
+    this.getAverageExpensesByYearFromState();
+    this.getAveragePercentOfSavingByYearFromState();
   },
 
   computed: {
     ...mapState({
-      // dashboard: (state) => state.dashboard,
-      // percentOfSaving: (state) => state.percentOfSaving,
-      // balance: (state) => state.balance,
-      // balanceGoal: (state) => state.balanceGoal,
-      // averageIncomes: (state) => state.averageIncomes,
       loading: (state) => state.preloader,
     }),
-    months () {
-      return this.$store.getters.months
-    },
-    totalAmountIncomes () {
-      return this.$store.getters.totalAmountIncomes
-    },
-    totalAmountExpenses () {
-      return this.$store.getters.totalAmountExpenses
-    },
-    percentOfSaving () {
-      return this.$store.getters.percentOfSaving
-    },
-    balance () {
-      return this.$store.getters.balance
-    },
-    balanceGoal () {
-      return this.$store.getters.balanceGoal
-    },
-    averageIncomes () {
-      return this.$store.getters.averageIncomes
-    },
-
+    ...mapGetters({
+      months: 'months',
+      totalAmountIncomes: 'totalAmountIncomes',
+      totalAmountExpenses: 'totalAmountExpenses',
+      percentOfSaving: 'percentOfSaving',
+      balance: 'balance',
+      balanceGoal: 'balanceGoal',
+      averageIncomes: 'averageIncomes',
+      averageExpenses: 'averageExpenses',
+      averagePercentOfSaving: 'averagePercentOfSaving',
+    })
   },
 
   methods: {
@@ -535,6 +545,8 @@ export default {
       "getBalanceByMonth",
       "getBalanceGoalByMonth",
       "getAverageIncomesByYear",
+      "getAverageExpensesByYear",
+      "getAveragePercentOfSavingByYear",
     ]),
 
     ...mapMutations([]),
@@ -641,6 +653,22 @@ export default {
       };
 
       this.getAverageIncomesByYear(params);
+    },
+
+    getAverageExpensesByYearFromState() {
+      const params = {
+        due_date: this.year,
+      };
+
+      this.getAverageExpensesByYear(params);
+    },
+
+    getAveragePercentOfSavingByYearFromState() {
+      const params = {
+        due_date: this.year,
+      };
+
+      this.getAveragePercentOfSavingByYear(params);
     },
 
     complete(index) {
