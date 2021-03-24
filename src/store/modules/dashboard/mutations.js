@@ -30,5 +30,53 @@ export default {
   SET_AVERAGE_PERCENT_OF_SAVING_BY_YEAR_IN_STATE (state, averagePercentOfSaving) {
     state.averagePercentOfSaving = averagePercentOfSaving
   },
-  
+
+  SET_INCOMES_YEAR_CHART_IN_STATE (state, incomesYearChart) {
+    // state.incomesYearChart = incomesYearChart
+    let months = ["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
+    state.incomesYearChart.data.labels = incomesYearChart.map(function(item) {
+      return months[item.month -1];
+    })
+
+    state.incomesYearChart.data.values = incomesYearChart.map(function(item) {
+      return parseFloat(item.amount);
+    })
+  },
+
+  SET_EXPENSES_YEAR_CHART_IN_STATE (state, expensesYearChart) {
+    // state.expensesYearChart = expensesYearChart
+    let months = ["JAN","FEV","MAR","ABR","MAI","JUN","JUL","AGO","SET","OUT","NOV","DEZ"];
+    state.expensesYearChart.data.labels = expensesYearChart.map(function(item) {
+      return months[item.month -1];
+    })
+
+    state.expensesYearChart.data.values = expensesYearChart.map(function(item) {
+      return parseFloat(item.amount);
+    })
+  },
+
+  SET_EXPENSES_TO_BE_DUE (state, expensesToBeDue) {
+    state.expensesToBeDue.data = expensesToBeDue.map(function(item) {
+      return {
+        'id': item.id,
+        'name': item.name,
+        'category': item.category.name,
+        'due_date': item.due_date,
+        'amount': item.amount
+      }
+    })
+  },
+
+  SET_INCOMES_TO_BE_DUE (state, incomesToBeDue) {
+    state.incomesToBeDue.data = incomesToBeDue.map(function(item) {
+      return {
+        'id': item.id,
+        'name': item.name,
+        'category': item.category.name,
+        'due_date': item.due_date,
+        'amount': item.amount
+      }
+    })
+  },
+
 }

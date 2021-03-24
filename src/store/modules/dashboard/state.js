@@ -29,18 +29,32 @@ export default {
   },
 
   balanceGoal: {
-
   },
 
   averageIncomes: {
-
   },
 
   averageExpenses: {
-
   },
 
   averagePercentOfSaving: {
-
   },
+
+  expensesYearChart: {
+    data: {
+      labels: [],
+      values: [],
+    }
+  },
+
+  incomesYearChart: {
+    data: {
+      labels: [],
+      values: [],
+    },
+  },
+
+  expensesToBeDue: {},
+
+  incomesToBeDue: {},
 }

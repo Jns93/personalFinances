@@ -31,6 +31,7 @@ return `R$ ${parseFloat(valor).toFixed(2)}`.replace('.', ',')
 })
 
 Vue.use(require('vue-moment'))
+Vue.use(require('vue-chartist'))
 
 new Vue({
   router,

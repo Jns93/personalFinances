@@ -1,6 +1,5 @@
 <template>
   <v-container id="dashboard" fluid tag="section" v-if="!loading">
-
     <!-- CONTROLES MÊS E ANO -->
     <v-row justify="center">
       <v-btn class="mr-5" icon @click.prevent="prev">
@@ -30,8 +29,7 @@
           :value="applyFilterVmoney(totalAmountIncomes)"
           sub-icon="mdi-information-variant"
           :sub-text="
-            'Média de rendimentos por mês: ' +
-            applyFilterVmoney(averageIncomes)
+            'Média de rendimentos do ano: ' + applyFilterVmoney(averageIncomes)
           "
         />
       </v-col>
@@ -44,8 +42,7 @@
           :value="applyFilterVmoney(totalAmountExpenses)"
           sub-icon="mdi-information-variant"
           :sub-text="
-            'Média de despesas por mês: ' +
-            applyFilterVmoney(averageExpenses)
+            'Média de despesas do ano: ' + applyFilterVmoney(averageExpenses)
           "
         />
       </v-col>
@@ -55,10 +52,9 @@
           icon="mdi-sack-percent"
           title="Percentual econômico"
           :value="percentOfSaving + '%'"
-          sub-icon="mdi-bullseye-arrow"
+          sub-icon="mdi-information-variant"
           :sub-text="
-            'Percentual de econômia médio: ' +
-            averagePercentOfSaving + '%'
+            'Percentual econômico médio: ' + averagePercentOfSaving + '%'
           "
         />
       </v-col>
@@ -70,176 +66,154 @@
           title="Saldo"
           :value="applyFilterVmoney(balance)"
           sub-icon="mdi-bullseye-arrow"
-          :sub-text="'Objetivo: ' + applyFilterVmoney(balanceGoal)"
+          :sub-text="
+            'Meta do mês: ' +
+            applyFilterVmoney(balanceGoal) +
+            ' (30% da sua renda)'
+          "
         />
       </v-col>
     </v-row>
     <!-- INDICADORES DO ANO E AVISOS-->
     <p class="font-weight-thin mb-0">Indicadores do ano</p>
     <v-row>
+      <!-- CHART DAILY -->
       <v-col cols="12" lg="4">
-        <base-material-chart-card
-          :data="emailsSubscriptionChart.data"
-          :options="emailsSubscriptionChart.options"
-          :responsive-options="emailsSubscriptionChart.responsiveOptions"
-          color="#E91E63"
-          hover-reveal
-          type="Bar"
-        >
-          <template v-slot:reveal-actions>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" color="info" icon v-on="on">
-                  <v-icon color="info"> mdi-refresh </v-icon>
-                </v-btn>
-              </template>
+        <v-card class="mt-4 mx-auto">
+          <v-sheet
+            class="v-sheet--offset mx-auto"
+            color="success"
+            elevation="12"
+          >
+            <v-sparkline
+              :labels="incomesYearChart.data.labels"
+              :value="incomesYearChart.data.values"
+              color="white"
+              line-width="2"
+              padding="16"
+              auto-draw
+              auto-line-width
+            ></v-sparkline>
+          </v-sheet>
 
-              <span>Refresh</span>
-            </v-tooltip>
-
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" light icon v-on="on">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </template>
-
-              <span>Change Date</span>
-            </v-tooltip>
-          </template>
-
-          <h4 class="card-title font-weight-light mt-2 ml-2">Saldo por mês</h4>
-
-          <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            Acompanhe a sua performance por mês ao longo do ano.
-          </p>
-
-          <template v-slot:actions>
-            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
+          <v-card-text class="pt-0">
+            <div class="title font-weight-light mb-2">User Registrations</div>
+            <div class="subheading font-weight-light grey--text">
+              Last Campaign Performance
+            </div>
+            <v-divider class="my-2"></v-divider>
+            <v-icon class="mr-2" small> mdi-clock </v-icon>
             <span class="caption grey--text font-weight-light"
-              >updated 10 minutes ago</span
+              >last registration 26 minutes ago</span
             >
-          </template>
-        </base-material-chart-card>
+          </v-card-text>
+        </v-card>
       </v-col>
 
       <v-col cols="12" lg="4">
-        <base-material-chart-card
-          :data="dailySalesChart.data"
-          :options="dailySalesChart.options"
-          color="success"
-          hover-reveal
-          type="Line"
-        >
-          <template v-slot:reveal-actions>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" color="info" icon v-on="on">
-                  <v-icon color="info"> mdi-refresh </v-icon>
-                </v-btn>
-              </template>
+        <v-card class="mt-4 mx-auto">
+          <v-sheet class="v-sheet--offset mx-auto" color="red" elevation="12">
+            <v-sparkline
+              :labels="expensesYearChart.data.labels"
+              :value="expensesYearChart.data.values"
+              color="white"
+              line-width="2"
+              padding="16"
+              auto-draw
+              auto-line-width
+            ></v-sparkline>
+          </v-sheet>
 
-              <span>Refresh</span>
-            </v-tooltip>
-
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" light icon v-on="on">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </template>
-
-              <span>Change Date</span>
-            </v-tooltip>
-          </template>
-
-          <h4 class="card-title font-weight-light mt-2 ml-2">
-            Receita por mês
-          </h4>
-
-          <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            Acompanhe a sua performance por mês ao longo do ano.
-          </p>
-
-          <template v-slot:actions>
-            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
+          <v-card-text class="pt-0">
+            <div class="title font-weight-light mb-2">User Registrations</div>
+            <div class="subheading font-weight-light grey--text">
+              Last Campaign Performance
+            </div>
+            <v-divider class="my-2"></v-divider>
+            <v-icon class="mr-2" small> mdi-clock </v-icon>
             <span class="caption grey--text font-weight-light"
-              >updated 4 minutes ago</span
+              >last registration 26 minutes ago</span
             >
-          </template>
-        </base-material-chart-card>
+          </v-card-text>
+        </v-card>
       </v-col>
 
       <v-col cols="12" lg="4">
-        <base-material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
-          hover-reveal
-          color="info"
-          type="Line"
-        >
-          <template v-slot:reveal-actions>
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" color="info" icon v-on="on">
-                  <v-icon color="info"> mdi-refresh </v-icon>
-                </v-btn>
-              </template>
+        <v-card class="mt-4 mx-auto">
+          <v-sheet class="v-sheet--offset mx-auto" color="cyan" elevation="12">
+            <v-sparkline
+              :labels="expensesYearChart.data.labels"
+              :value="expensesYearChart.data.values"
+              color="white"
+              line-width="2"
+              padding="16"
+              auto-draw
+              auto-line-width
+            ></v-sparkline>
+          </v-sheet>
 
-              <span>Refresh</span>
-            </v-tooltip>
-
-            <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
-                <v-btn v-bind="attrs" light icon v-on="on">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </template>
-
-              <span>Change Date</span>
-            </v-tooltip>
-          </template>
-
-          <h3 class="card-title font-weight-light mt-2 ml-2">
-            Despesas por mês
-          </h3>
-
-          <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            Last Last Campaign Performance
-          </p>
-
-          <template v-slot:actions>
-            <v-icon class="mr-1" small> mdi-clock-outline </v-icon>
+          <v-card-text class="pt-0">
+            <div class="title font-weight-light mb-2">User Registrations</div>
+            <div class="subheading font-weight-light grey--text">
+              Last Campaign Performance
+            </div>
+            <v-divider class="my-2"></v-divider>
+            <v-icon class="mr-2" small> mdi-clock </v-icon>
             <span class="caption grey--text font-weight-light"
-              >campaign sent 26 minutes ago</span
+              >last registration 26 minutes ago</span
             >
-          </template>
-        </base-material-chart-card>
+          </v-card-text>
+        </v-card>
       </v-col>
+
       <v-col cols="12" md="6">
-        <base-material-card color="orange" class="px-5 py-3">
+        <base-material-card color="grey darken-4" class="px-5 py-3">
           <template v-slot:heading>
             <div class="display-2 font-weight-light">
-              <v-icon> mdi-alert </v-icon>
+              <!-- <v-icon> mdi-alert </v-icon> -->
               Despesas próximas do vencimento
             </div>
           </template>
           <v-card-text>
-            <v-data-table :headers="headers" :items="items" />
+            <v-data-table
+            :headers="headersToBeDueTable"
+            :items="expensesToBeDueItems.data"
+>
+              <template v-slot:item.due_date="{ item }">
+                <v-chip v-if="item.due_date <= now" color="error">
+                  {{ item.due_date | moment("DD/MM/YYYY") }}
+                </v-chip>
+                                <v-chip v-else color="yellow">
+                {{ item.due_date | moment("DD/MM/YYYY") }}
+                </v-chip>
+              </template>
+              <template v-slot:item.amount="{ item }">
+                {{ item.amount | money }}
+              </template>
+            </v-data-table>
           </v-card-text>
         </base-material-card>
       </v-col>
 
       <v-col cols="12" md="6">
-        <base-material-card color="red" class="px-5 py-3">
+        <base-material-card color="grey darken-4" class="px-5 py-3">
           <template v-slot:heading>
             <div class="display-2 font-weight-light">
-              <v-icon> mdi-arrow-bottom-left </v-icon>
-              Despesas do mês
+              <!-- <v-icon> mdi-arrow-bottom-left </v-icon> -->
+              A receber
             </div>
           </template>
           <v-card-text>
-            <v-data-table :headers="headers" :items="items" />
+            <v-data-table
+            :headers="headersToBeDueTable"
+            :items="incomesToBeDueItems.data">
+              <template v-slot:item.due_date="{ item }">
+                {{ item.due_date | moment("DD/MM/YYYY") }}
+              </template>
+              <template v-slot:item.amount="{ item }">
+                {{ item.amount | money }}
+              </template>
+            </v-data-table>
           </v-card-text>
         </base-material-card>
       </v-col>
@@ -252,34 +226,15 @@
         color="grey"
         size="50"
       ></v-progress-circular>
-      <h1 class="mt-3">Carregando...</h1>
+      <h1 class="mt-3" style="color:grey;">Carregando...</h1>
     </div>
   </v-container>
-  <!-- <v-container v-else>
-    <div class="text-center">
-      <v-progress-circular
-        indeterminate
-        color="grey"
-      ></v-progress-circular>
-    </div>
-    <v-skeleton-loader
-      v-bind="attrs"
-      type="article, actions"
-    ></v-skeleton-loader>
-    <v-skeleton-loader v-bind="attrs" type="article"></v-skeleton-loader>
-    <v-skeleton-loader v-bind="attrs" type="card-avatar"></v-skeleton-loader>
-    <v-skeleton-loader v-bind="attrs" type="article"></v-skeleton-loader>
-    <v-skeleton-loader v-bind="attrs" type="actions"></v-skeleton-loader>
-    <v-skeleton-loader v-bind="attrs" type="article"></v-skeleton-loader>
-  </v-container> -->
-
 </template>
 
 <script>
 import { VMoney } from "v-money";
 import { mapActions, mapState, mapMutations, mapGetters } from "vuex";
 import moment from "moment";
-
 export default {
   // name: 'DashboardDashboard',
 
@@ -293,156 +248,43 @@ export default {
       },
       month: 1,
       year: 2021,
-      dailySalesChart: {
-        data: {
-          labels: ["M", "T", "W", "T", "F", "S", "S"],
-          series: [[12, 17, 7, 17, 23, 18, 38]],
-        },
-        options: {
-          lineSmooth: this.$chartist.Interpolation.cardinal({
-            tension: 0,
-          }),
-          low: 0,
-          high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          },
-        },
-      },
-      dataCompletedTasksChart: {
-        data: {
-          labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
-          series: [[230, 750, 450, 300, 280, 240, 200, 190]],
-        },
-        options: {
-          lineSmooth: this.$chartist.Interpolation.cardinal({
-            tension: 0,
-          }),
-          low: 0,
-          high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-          chartPadding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          },
-        },
-      },
-      emailsSubscriptionChart: {
-        data: {
-          labels: [
-            "Ja",
-            "Fe",
-            "Ma",
-            "Ap",
-            "Mai",
-            "Ju",
-            "Jul",
-            "Au",
-            "Se",
-            "Oc",
-            "No",
-            "De",
-          ],
-          series: [
-            [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-          ],
-        },
-        options: {
-          axisX: {
-            showGrid: false,
-          },
-          low: 0,
-          high: 1000,
-          chartPadding: {
-            top: 0,
-            right: 5,
-            bottom: 0,
-            left: 0,
-          },
-        },
-        responsiveOptions: [
-          [
-            "screen and (max-width: 640px)",
-            {
-              seriesBarDistance: 5,
-              axisX: {
-                labelInterpolationFnc: function (value) {
-                  return value[0];
-                },
-              },
-            },
-          ],
-        ],
-      },
-      headers: [
+      // incomesChart: {
+      //   data: {
+      //     labels: [],
+      //     values: [],
+      //   },
+      // },
+      // expensesChart: {
+      //   data: {
+      //     labels: [],
+      //     values: [],
+      //   },
+      // },
+      headersToBeDueTable: [
         {
-          sortable: false,
+          sortable: true,
           text: "ID",
           value: "id",
         },
         {
-          sortable: false,
+          sortable: true,
           text: "Name",
           value: "name",
         },
         {
-          sortable: false,
-          text: "Salary",
-          value: "salary",
-          align: "right",
+          sortable: true,
+          text: "Categoria",
+          value: "category",
         },
         {
-          sortable: false,
-          text: "Country",
-          value: "country",
-          align: "right",
+          sortable: true,
+          text: "Vencimento",
+          value: "due_date",
         },
         {
-          sortable: false,
-          text: "City",
-          value: "city",
-          align: "right",
-        },
-      ],
-      items: [
-        {
-          id: 1,
-          name: "Dakota Rice",
-          country: "Niger",
-          city: "Oud-Tunrhout",
-          salary: "$35,738",
-        },
-        {
-          id: 2,
-          name: "Minerva Hooper",
-          country: "Curaçao",
-          city: "Sinaai-Waas",
-          salary: "$23,738",
-        },
-        {
-          id: 3,
-          name: "Sage Rodriguez",
-          country: "Netherlands",
-          city: "Overland Park",
-          salary: "$56,142",
-        },
-        {
-          id: 4,
-          name: "Philip Chanley",
-          country: "Korea, South",
-          city: "Gloucester",
-          salary: "$38,735",
-        },
-        {
-          id: 5,
-          name: "Doris Greene",
-          country: "Malawi",
-          city: "Feldkirchen in Kārnten",
-          salary: "$63,542",
+          sortable: true,
+          text: "Valor",
+          value: "amount",
         },
       ],
       tabs: 0,
@@ -503,11 +345,15 @@ export default {
         1: false,
         2: false,
       },
+      now: moment().format(),
     };
   },
 
   directives: { money: VMoney },
 
+  beforeCreate() {
+
+  },
   created() {
     this.setDateToday();
     this.getTotalExpensesByMonthFromState();
@@ -518,23 +364,45 @@ export default {
     this.getAverageIncomesByYearFromState();
     this.getAverageExpensesByYearFromState();
     this.getAveragePercentOfSavingByYearFromState();
+    this.getIncomesYearChartFromState();
+    this.getExpensesYearChartFromState();
+    this.getIncomesToBeDueFromState();
+    this.getExpensesToBeDueFromState();
   },
+
+  mounted() {
+  },
+
+  watch: {},
 
   computed: {
     ...mapState({
       loading: (state) => state.preloader,
     }),
     ...mapGetters({
-      months: 'months',
-      totalAmountIncomes: 'totalAmountIncomes',
-      totalAmountExpenses: 'totalAmountExpenses',
-      percentOfSaving: 'percentOfSaving',
-      balance: 'balance',
-      balanceGoal: 'balanceGoal',
-      averageIncomes: 'averageIncomes',
-      averageExpenses: 'averageExpenses',
-      averagePercentOfSaving: 'averagePercentOfSaving',
-    })
+      months: "months",
+      totalAmountIncomes: "totalAmountIncomes",
+      totalAmountExpenses: "totalAmountExpenses",
+      percentOfSaving: "percentOfSaving",
+      balance: "balance",
+      balanceGoal: "balanceGoal",
+      averageIncomes: "averageIncomes",
+      averageExpenses: "averageExpenses",
+      averagePercentOfSaving: "averagePercentOfSaving",
+      //necessario colocar o sufixo getter pois houve conflito dentro do metodo getExpensesYearChartFromState
+      incomesYearChart: "incomesYearChart",
+      expensesYearChart: "expensesYearChart",
+      expensesToBeDue: "expensesToBeDue",
+      incomesToBeDue: "incomesToBeDue"
+    }),
+
+    expensesToBeDueItems: function() {
+      return this.expensesToBeDue
+    },
+
+    incomesToBeDueItems: function() {
+      return this.incomesToBeDue
+    }
   },
 
   methods: {
@@ -547,14 +415,15 @@ export default {
       "getAverageIncomesByYear",
       "getAverageExpensesByYear",
       "getAveragePercentOfSavingByYear",
+      "getIncomesYearChart",
+      "getExpensesYearChart",
+      "getExpensesToBeDue",
+      "getIncomesToBeDue",
     ]),
 
     ...mapMutations([]),
 
-    // ...mapGetters([]),
-
     resetAllState() {
-      console.log("reset state", this.balance);
       this.balance = null;
     },
 
@@ -580,7 +449,9 @@ export default {
       this.getTotalIncomesByMonthFromState();
       this.getPercentageOfSavingsByMonthFromState();
       this.getBalanceByMonthFromState();
+      this.getBalanceGoalByMonthFromState();
       this.getAverageIncomesByYearFromState();
+      this.getExpensesYearChartFromState();
     },
     next() {
       this.month++;
@@ -592,7 +463,9 @@ export default {
       this.getTotalIncomesByMonthFromState();
       this.getPercentageOfSavingsByMonthFromState();
       this.getBalanceByMonthFromState();
+      this.getBalanceGoalByMonthFromState();
       this.getAverageIncomesByYearFromState();
+      this.getExpensesYearChartFromState();
     },
 
     applyFilterVmoney(value) {
@@ -606,7 +479,7 @@ export default {
       };
 
       this.getTotalIncomesByMonth(params);
-      this.totalAmountIncomes = this.totalAmountIncomes;
+      // this.totalAmountIncomes = this.totalAmountIncomes;
     },
 
     getTotalExpensesByMonthFromState() {
@@ -616,7 +489,7 @@ export default {
       };
 
       this.getTotalExpensesByMonth(params);
-      this.totalAmountExpenses = this.totalAmountExpenses;
+      // this.totalAmountExpenses = this.totalAmountExpenses;
     },
 
     getPercentageOfSavingsByMonthFromState() {
@@ -626,7 +499,7 @@ export default {
       };
 
       this.getPercentageOfSavingsByMonth(params);
-      this.percentOfSaving = this.percentOfSaving;
+      // this.percentOfSaving = this.percentOfSaving;
     },
 
     getBalanceByMonthFromState() {
@@ -671,9 +544,88 @@ export default {
       this.getAveragePercentOfSavingByYear(params);
     },
 
+    getIncomesYearChartFromState() {
+      const params = {
+        due_date: this.year,
+      };
+
+      this.getIncomesYearChart(params)
+      // .finally(
+        // setTimeout(function () {
+          // (this.incomesChart.data.labels = this.convertApidataToChartLabel(
+          //   this.incomesYearChart
+          // )),
+          // (this.incomesChart.data.values = this.convertApidataToChartValues(
+          //   this.incomesYearChart
+          // ))
+        // }, 500)
+      // );
+    },
+
+    getExpensesYearChartFromState() {
+      const params = {
+        due_date: this.year,
+      };
+
+      this.getExpensesYearChart(params)
+      // .finally(
+        // setTimeout(function () {
+          // this.expensesChart.data.labels = this.convertApidataToChartLabel(this.expensesYearChart),
+          // this.expensesChart.data.values = this.convertApidataToChartValues(this.expensesYearChart)
+        // }, 4000)
+        // );
+    },
+
+    // convertApidataToChartLabel(data) {
+    //   let labels = [];
+    //   let months = [
+    //     "JAN",
+    //     "FEV",
+    //     "MAR",
+    //     "ABR",
+    //     "MAI",
+    //     "JUN",
+    //     "JUL",
+    //     "AGO",
+    //     "SET",
+    //     "OUT",
+    //     "NOV",
+    //     "DEZ",
+    //   ];
+
+    //   labels = data.map(function (item) {
+    //     return months[item.month - 1];
+    //   });
+    //   return labels;
+    // },
+
+    // convertApidataToChartValues(data) {
+    //   let values = [];
+
+    //   values = data.map(function (item) {
+    //     return parseFloat(item.amount);
+    //   });
+    //   return values;
+    // },
+
+    getExpensesToBeDueFromState () {
+      this.getExpensesToBeDue()
+    },
+
+    getIncomesToBeDueFromState () {
+      this.getIncomesToBeDue()
+    },
+
     complete(index) {
       this.list[index] = !this.list[index];
     },
   },
 };
 </script>
+
+<style>
+.v-sheet--offset {
+  top: -24px;
+  position: relative;
+}
+</style>

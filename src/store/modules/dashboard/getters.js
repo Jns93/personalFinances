@@ -27,4 +27,20 @@ export default {
     return state.averagePercentOfSaving
   },
 
+  incomesYearChart: (state) => {
+    console.log('getter incomes year', state.incomesYearChart)
+    return state.incomesYearChart
+  },
+
+  expensesYearChart: (state) => {
+    return state.expensesYearChart
+  },
+
+  expensesToBeDue: (state) => {
+    return state.expensesToBeDue
+  },
+
+  incomesToBeDue: (state) => {
+    return state.incomesToBeDue
+  }
 }

@@ -5,18 +5,20 @@
     :dark="barColor !== 'rgba(228, 226, 226, 1), rgba(255, 255, 255, 0.7)'"
     :expand-on-hover="expandOnHover"
     :right="$vuetify.rtl"
-    :src="barImage"
     mobile-breakpoint="960"
+    color="grey darken-4"
     app
     width="260"
     v-bind="$attrs"
+    disable-route-watcher
+
   >
-    <template v-slot:img="props">
+    <!-- <template v-slot:img="props">
       <v-img
         :gradient="`to bottom, ${barColor}`"
         v-bind="props"
       />
-    </template>
+    </template> -->
 
     <v-divider class="mb-1" />
 
