@@ -12,12 +12,12 @@
 
 <script>
   export default {
-    name: 'DashboardIndex',
+    name: 'DashboardTemplate',
 
     components: {
-      DashboardCoreAppBar: () => import('./components/core/AppBar'),
-      DashboardCoreDrawer: () => import('./components/core/Drawer'),
-      DashboardCoreView: () => import('./components/core/View'),
+      DashboardCoreAppBar: () => import('./layouts/AppBar'),
+      DashboardCoreDrawer: () => import('./layouts/Drawer'),
+      DashboardCoreView: () => import('./layouts/View'),
     },
 
     data: () => ({

@@ -1,62 +1,94 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import { TOKEN_NAME } from '@/configs/api'
 
 Vue.use(Router)
 
-export default new Router({
-  mode: 'hash',
+
+const router = new Router({
+  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
-      path: '/',
-      component: () => import('@/views/dashboard/Index'),
+      path: '/', redirect: '/dashboard',
+      component: () => import('@/views/AuthTemplate'),
       children: [
-        // Dashboard
+        {
+          name: 'Register',
+          path: '/register',
+          component: () => import('@/views/components/auth/Register'),
+          meta: { guestOnly: true}
+        },
+        {
+          name: 'Login',
+          path: '/login',
+          component: () => import('@/views/components/auth/Login'),
+          meta: { guestOnly: true}
+        }
+      ]
+    },
+
+    {
+      path: '/',
+      component: () => import('@/views/DashboardTemplate'),
+      children: [
         {
           name: 'Dashboard',
-          path: '',
-          component: () => import('@/views/dashboard/Dashboard'),
+          path: '/dashboard',
+          component: () => import('@/views/components/pages/Dashboard'),
+          meta: { authOnly: true }
         },
-        // Pages
         {
           name: 'Receitas',
-          path: 'pages/receitas',
-          component: () => import('@/views/dashboard/pages/Income'),
-        },
-        {
-          name: 'Notifications',
-          path: 'components/notifications',
-          component: () => import('@/views/dashboard/component/Notifications'),
-        },
-        {
-          name: 'Icons',
-          path: 'components/icons',
-          component: () => import('@/views/dashboard/component/Icons'),
+          path: '/receitas',
+          component: () => import('@/views/components/pages/Income'),
+          meta: { authOnly: true }
         },
         {
           name: 'Categorias',
           path: 'categories',
-          component: () => import('@/views/dashboard/component/Categories'),
+          component: () => import('@/views/components/pages/Categories'),
+          meta: { authOnly: true }
         },
-        // Tables
         {
           name: 'Despesas',
           path: 'despesas',
-          component: () => import('@/views/dashboard/Expenses'),
-        },
-        // Maps
-        {
-          name: 'Google Maps',
-          path: 'maps/google-maps',
-          component: () => import('@/views/dashboard/maps/GoogleMaps'),
-        },
-        // Upgrade
-        {
-          name: 'Upgrade',
-          path: 'upgrade',
-          component: () => import('@/views/dashboard/Upgrade'),
+          component: () => import('@/views/components/pages/Expenses'),
+          // meta: {
+          //   title: 'Personal Finances - Despesas',
+          //   authOnly: true }
+          // },
+          meta: { authOnly: true }
         },
       ],
     },
   ],
 })
+
+function isLoggedIn() {
+  return localStorage.getItem(TOKEN_NAME)
+}
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.authOnly)) {
+    if (!isLoggedIn()) {
+      next({
+        name: 'Login',
+      })
+    } else {
+      next()
+    }
+  } else if (to.matched.some(record => record.meta.guestOnly)) {
+    if (isLoggedIn()) {
+      next({
+        name: 'Dashboard'
+      });
+    } else {
+      next();
+    }
+  } else {
+    next()
+  }
+})
+
+export default router

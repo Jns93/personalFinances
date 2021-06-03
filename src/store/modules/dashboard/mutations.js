@@ -4,6 +4,7 @@ export default {
   },
 
   SET_TOTAL_AMOUNT_EXPENSES_IN_STATE (state, totalExpensesAmount) {
+    console.log('total amount expenses', totalExpensesAmount)
     state.totalAmountExpenses = totalExpensesAmount
   },
 

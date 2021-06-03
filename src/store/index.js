@@ -5,6 +5,7 @@ import subcategories from './modules/subcategories'
 import expenses from './modules/expenses'
 import incomes from './modules/incomes'
 import dashboard from './modules/dashboard'
+import auth from './modules/auth/auth'
 
 import { state, mutations } from './default'
 
@@ -17,6 +18,7 @@ const store = new Vuex.Store({
     expenses,
     incomes,
     dashboard,
+    auth,
   },
   state,
   mutations,

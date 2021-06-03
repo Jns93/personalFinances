@@ -3,7 +3,7 @@
     <v-card
       id="settings"
       class="py-2 px-4"
-      color="rgba(0, 0, 0, .3)"
+      color="grey"
       dark
       flat
       link
@@ -43,7 +43,7 @@
               <template v-slot="{ active, toggle }">
                 <v-avatar
                   :class="active && 'v-settings__item--active'"
-                  :color="color"
+                  color="blue"
                   class="v-settings__item"
                   size="25"
                   @click="toggle"
@@ -199,7 +199,7 @@
       colors: [
         'grey darken-3'
       ],
-      image: 'https://demos.creative-tim.com/material-dashboard/assets/img/sidebar-1.jpg',
+      image: 'https://demos.creative-tim.com/material-dashboard/assets/img/sidebar-2.jpg',
       images: [
         'https://demos.creative-tim.com/material-dashboard/assets/img/sidebar-1.jpg',
         'https://demos.creative-tim.com/material-dashboard/assets/img/sidebar-2.jpg',

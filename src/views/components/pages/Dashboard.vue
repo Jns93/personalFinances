@@ -1,5 +1,11 @@
 <template>
-  <v-container id="dashboard" fluid tag="section" v-if="!loading">
+  <v-container
+    id="dashboard"
+    fluid
+    tag="section"
+    v-if="!loading"
+    style="height: 90%; background: #fafafa"
+  >
     <!-- CONTROLES MÊS E ANO -->
     <v-row justify="center">
       <v-btn class="mr-5" icon @click.prevent="prev">
@@ -83,7 +89,7 @@
           <v-sheet
             class="v-sheet--offset mx-auto"
             color="success"
-            elevation="12"
+            elevation="2"
           >
             <v-sparkline
               :labels="incomesYearChart.data.labels"
@@ -112,7 +118,7 @@
 
       <v-col cols="12" lg="4">
         <v-card class="mt-4 mx-auto">
-          <v-sheet class="v-sheet--offset mx-auto" color="red" elevation="12">
+          <v-sheet class="v-sheet--offset mx-auto" color="red" elevation="2">
             <v-sparkline
               :labels="expensesYearChart.data.labels"
               :value="expensesYearChart.data.values"
@@ -140,7 +146,7 @@
 
       <v-col cols="12" lg="4">
         <v-card class="mt-4 mx-auto">
-          <v-sheet class="v-sheet--offset mx-auto" color="cyan" elevation="12">
+          <v-sheet class="v-sheet--offset mx-auto" color="cyan" elevation="2">
             <v-sparkline
               :labels="expensesYearChart.data.labels"
               :value="expensesYearChart.data.values"
@@ -176,15 +182,15 @@
           </template>
           <v-card-text>
             <v-data-table
-            :headers="headersToBeDueTable"
-            :items="expensesToBeDueItems.data"
->
+              :headers="headersToBeDueTable"
+              :items="expensesToBeDueItems.data"
+            >
               <template v-slot:item.due_date="{ item }">
                 <v-chip v-if="item.due_date <= now" color="error">
                   {{ item.due_date | moment("DD/MM/YYYY") }}
                 </v-chip>
-                                <v-chip v-else color="yellow">
-                {{ item.due_date | moment("DD/MM/YYYY") }}
+                <v-chip v-else color="yellow">
+                  {{ item.due_date | moment("DD/MM/YYYY") }}
                 </v-chip>
               </template>
               <template v-slot:item.amount="{ item }">
@@ -205,8 +211,9 @@
           </template>
           <v-card-text>
             <v-data-table
-            :headers="headersToBeDueTable"
-            :items="incomesToBeDueItems.data">
+              :headers="headersToBeDueTable"
+              :items="incomesToBeDueItems.data"
+            >
               <template v-slot:item.due_date="{ item }">
                 {{ item.due_date | moment("DD/MM/YYYY") }}
               </template>
@@ -219,14 +226,20 @@
       </v-col>
     </v-row>
   </v-container>
-  <v-container id="dashboard" fluid tag="section" v-else>
+  <v-container
+    id="dashboard"
+    fluid
+    tag="section"
+    style="height: 90%; background: #fafafa"
+    v-else
+  >
     <div class="text-center">
       <v-progress-circular
         indeterminate
         color="grey"
         size="50"
       ></v-progress-circular>
-      <h1 class="mt-3" style="color:grey;">Carregando...</h1>
+      <h1 class="mt-3" style="color: grey">Carregando...</h1>
     </div>
   </v-container>
 </template>
@@ -351,9 +364,7 @@ export default {
 
   directives: { money: VMoney },
 
-  beforeCreate() {
-
-  },
+  beforeCreate() {},
   created() {
     this.setDateToday();
     this.getTotalExpensesByMonthFromState();
@@ -370,14 +381,14 @@ export default {
     this.getExpensesToBeDueFromState();
   },
 
-  mounted() {
-  },
+  mounted() {},
 
   watch: {},
 
   computed: {
     ...mapState({
       loading: (state) => state.preloader,
+      me: (state) => state.auth.me,
     }),
     ...mapGetters({
       months: "months",
@@ -393,16 +404,16 @@ export default {
       incomesYearChart: "incomesYearChart",
       expensesYearChart: "expensesYearChart",
       expensesToBeDue: "expensesToBeDue",
-      incomesToBeDue: "incomesToBeDue"
+      incomesToBeDue: "incomesToBeDue",
     }),
 
-    expensesToBeDueItems: function() {
-      return this.expensesToBeDue
+    expensesToBeDueItems: function () {
+      return this.expensesToBeDue;
     },
 
-    incomesToBeDueItems: function() {
-      return this.incomesToBeDue
-    }
+    incomesToBeDueItems: function () {
+      return this.incomesToBeDue;
+    },
   },
 
   methods: {
@@ -474,7 +485,9 @@ export default {
 
     getTotalIncomesByMonthFromState() {
       const monthYear = this.formatDateYearMonthFromApi();
+
       const params = {
+        userId: this.me.id,
         due_date: monthYear,
       };
 
@@ -484,27 +497,34 @@ export default {
 
     getTotalExpensesByMonthFromState() {
       const monthYear = this.formatDateYearMonthFromApi();
-      const params = {
-        due_date: monthYear,
-      };
 
-      this.getTotalExpensesByMonth(params);
-      // this.totalAmountExpenses = this.totalAmountExpenses;
+
+      if(this.me.id === '') {
+        setTimeout(() => {
+          const params = {
+          userId: this.me.id,
+          due_date: monthYear,
+      };
+        this.getTotalExpensesByMonth(params);
+        },3000);
+      }
+
     },
 
     getPercentageOfSavingsByMonthFromState() {
       const monthYear = this.formatDateYearMonthFromApi();
       const params = {
+        userId: this.me.id,
         due_date: monthYear,
       };
 
       this.getPercentageOfSavingsByMonth(params);
-      // this.percentOfSaving = this.percentOfSaving;
     },
 
     getBalanceByMonthFromState() {
       const monthYear = this.formatDateYearMonthFromApi();
       const params = {
+        userId: this.me.id,
         due_date: monthYear,
       };
 
@@ -514,6 +534,7 @@ export default {
     getBalanceGoalByMonthFromState() {
       const monthYear = this.formatDateYearMonthFromApi();
       const params = {
+        userId: this.me.id,
         due_date: monthYear,
       };
 
@@ -522,6 +543,7 @@ export default {
 
     getAverageIncomesByYearFromState() {
       const params = {
+        userId: this.me.id,
         due_date: this.year,
       };
 
@@ -530,6 +552,7 @@ export default {
 
     getAverageExpensesByYearFromState() {
       const params = {
+        userId: this.me.id,
         due_date: this.year,
       };
 
@@ -538,6 +561,7 @@ export default {
 
     getAveragePercentOfSavingByYearFromState() {
       const params = {
+        userId: this.me.id,
         due_date: this.year,
       };
 
@@ -546,74 +570,36 @@ export default {
 
     getIncomesYearChartFromState() {
       const params = {
+        userId: this.me.id,
         due_date: this.year,
       };
 
-      this.getIncomesYearChart(params)
-      // .finally(
-        // setTimeout(function () {
-          // (this.incomesChart.data.labels = this.convertApidataToChartLabel(
-          //   this.incomesYearChart
-          // )),
-          // (this.incomesChart.data.values = this.convertApidataToChartValues(
-          //   this.incomesYearChart
-          // ))
-        // }, 500)
-      // );
+      this.getIncomesYearChart(params);
     },
 
     getExpensesYearChartFromState() {
       const params = {
+        userId: this.me.id,
         due_date: this.year,
       };
 
-      this.getExpensesYearChart(params)
-      // .finally(
-        // setTimeout(function () {
-          // this.expensesChart.data.labels = this.convertApidataToChartLabel(this.expensesYearChart),
-          // this.expensesChart.data.values = this.convertApidataToChartValues(this.expensesYearChart)
-        // }, 4000)
-        // );
+      this.getExpensesYearChart(params);
     },
 
-    // convertApidataToChartLabel(data) {
-    //   let labels = [];
-    //   let months = [
-    //     "JAN",
-    //     "FEV",
-    //     "MAR",
-    //     "ABR",
-    //     "MAI",
-    //     "JUN",
-    //     "JUL",
-    //     "AGO",
-    //     "SET",
-    //     "OUT",
-    //     "NOV",
-    //     "DEZ",
-    //   ];
+    getExpensesToBeDueFromState() {
+      const params = {
+        userId: this.me.id,
+      };
 
-    //   labels = data.map(function (item) {
-    //     return months[item.month - 1];
-    //   });
-    //   return labels;
-    // },
-
-    // convertApidataToChartValues(data) {
-    //   let values = [];
-
-    //   values = data.map(function (item) {
-    //     return parseFloat(item.amount);
-    //   });
-    //   return values;
-    // },
-
-    getExpensesToBeDueFromState () {
-      this.getExpensesToBeDue()
+      this.getExpensesToBeDue(params);
     },
 
-    getIncomesToBeDueFromState () {
-      this.getIncomesToBeDue()
+    getIncomesToBeDueFromState() {
+      const params = {
+        userId: this.me.id,
+      };
+
+      this.getIncomesToBeDue(params);
     },
 
     complete(index) {

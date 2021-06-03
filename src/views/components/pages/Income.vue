@@ -1,17 +1,22 @@
 <template>
-  <v-container id="despesas" fluid tag="section">
+  <v-container
+    id="receitas"
+    fluid
+    tag="section"
+    style="height: 90%; background: #fafafa"
+  >
     <v-row justify="center">
-      <v-btn class="mr-5" icon @click.prevent="prev">
+      <v-btn class="mr-5" icon @click.prevent="prevControlMonth">
         <v-icon large> mdi-chevron-left </v-icon>
       </v-btn>
       <h2
         class="font-weight-regular mt-1"
-        v-for="item in expenses.months"
+        v-for="item in incomes.months"
         :key="item.id"
       >
         {{ item[month - 1].name }} {{ year }}
       </h2>
-      <v-btn class="ml-5" icon @click.prevent="next">
+      <v-btn class="ml-5" icon @click.prevent="nextControlMonth">
         <v-icon large> mdi-chevron-right </v-icon>
       </v-btn>
     </v-row>
@@ -28,7 +33,7 @@
             elevation="2"
             v-bind="attrs"
             v-on="on"
-            @click.prevent="payExpensesSelected()"
+            @click.prevent="receiveIncomesSelected()"
           >
             <v-icon dark> mdi-check </v-icon>
           </v-btn>
@@ -52,21 +57,25 @@
             <v-icon dark> mdi-plus </v-icon>
           </v-btn>
         </template>
-        <span>Cadastrar despesa</span>
+        <span>Cadastrar receita</span>
       </v-tooltip>
     </v-row>
     <base-material-card
-      icon="mdi-arrow-bottom-left-thick"
-      title="Despesas"
+      icon="mdi-arrow-top-right"
+      title="Receitas"
       class="px-5 py-3"
-      color="error"
+      color="success"
     >
       <v-simple-table dense>
         <thead>
           <tr>
             <th class="font-weight-bold">
               <label class="form-checkbox">
-                <input type="checkbox" v-model="selectAll" @click="select" />
+                <input
+                  type="checkbox"
+                  v-model="selectAll"
+                  @click="selectItemsReceived"
+                />
                 <i class="form-icon"></i>
               </label>
             </th>
@@ -82,34 +91,34 @@
         </thead>
 
         <tbody>
-          <tr v-for="(expense, index) in expenses.expenses" :key="index">
+          <tr v-for="(income, index) in incomes.incomes" :key="index">
             <td>
               <label class="form-checkbox">
                 <input
-                  :disabled="expense.fl_pay == true"
+                  :disabled="income.fl_pay == true"
                   type="checkbox"
-                  :value="expense.id"
+                  :value="income.id"
                   v-model="selected"
                 />
                 <i class="form-icon"></i>
               </label>
             </td>
-            <td>{{ expense.name }}</td>
-            <td>{{ expense.description }}</td>
-            <td>{{ expense.category.name }}</td>
-            <td>{{ expense.created_at | moment("DD/MM/YYYY") }}</td>
-            <td>{{ expense.due_date | moment("DD/MM/YYYY") }}</td>
+            <td>{{ income.name }}</td>
+            <td>{{ income.description }}</td>
+            <td>{{ income.category.name }}</td>
+            <td>{{ income.created_at | moment("DD/MM/YYYY") }}</td>
+            <td>{{ income.due_date | moment("DD/MM/YYYY") }}</td>
             <td>
-              <v-chip small :color="expense.fl_pay ? 'success' : 'error'">
-                {{ expense.fl_pay ? "Pago" : "Á pagar" }}
+              <v-chip small :color="income.fl_pay ? 'success' : 'error'">
+                {{ income.fl_pay ? "Recebido" : "Á receber" }}
               </v-chip>
             </td>
             <td class="text-center">
               <v-btn
                 icon
                 color="grey"
-                @click="expSubCategoryId = expense.subcategory_id"
-                @click.prevent="openModalEditExpense(expense)"
+                @click="incomeSubcategoryId = income.subcategory_id"
+                @click.prevent="openModalEditIncome(income)"
               >
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
@@ -117,13 +126,13 @@
                 icon
                 color="grey"
                 @click="modalDelete = true"
-                @click.prevent="expId = expense.id"
+                @click.prevent="incomeId = income.id"
               >
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </td>
             <td class="text-right">
-              {{ expense.amount | money }}
+              {{ income.amount | money }}
             </td>
           </tr>
         </tbody>
@@ -140,14 +149,14 @@
               <td colspan="8"></td>
               <td class="text-right" v-bind="attrs" v-on="on">
                 <v-icon>mdi-information-variant</v-icon>
-                Total: {{ totalExpenses() | money }}
+                Total: {{ sumTotalIncomes() | money }}
               </td>
             </tr>
           </template>
           <tr>
             <span>
-              Á pagar: {{ totalToPayExpenses() | money }} <br />
-              Pago: {{ totalPaidExpenses() | money }}
+              Á receber: {{ sumTotalWillReceiveIncomes() | money }} <br />
+              Recebido: {{ sumTotalReceivedIncomes() | money }}
             </span>
           </tr>
         </v-tooltip>
@@ -155,46 +164,48 @@
     </base-material-card>
 
     <div class="py-3" />
-    <!-- MODAL STORE EXPENSE -->
+    <!-- MODAL STORE INCOME -->
     <template>
       <v-row justify="center">
         <v-dialog v-model="modalStore" persistent max-width="600px">
           <v-card>
             <v-card-title>
-              <span class="headline">Registrar despesa</span>
+              <span class="headline">Registrar receita</span>
             </v-card-title>
             <v-card-text>
               <v-container>
                 <v-row>
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
-                      label="Nome da despesa*"
+                      label="Nome da receita*"
                       required
-                      v-model="expName"
+                      v-model="incomeName"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
                       label="Descrição"
-                      v-model="expDescription"
+                      v-model="incomeDescription"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-select
                       label="Categoria*"
                       required
-                      v-model="expCategoryId"
+                      v-model="incomeCategoryId"
                       :items="categories.categories.data"
                       item-text="name"
                       item-value="id"
-                      v-on:change="getSubcategories(expCategoryId)"
+                      v-on:change="
+                        getSubcategoriesByCategoryForForm(incomeCategoryId)
+                      "
                     >
                     </v-select>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-select
                       label="Subcategoria*"
-                      v-model="expSubCategoryId"
+                      v-model="incomeSubcategoryId"
                       :items="subcategoriesByCategory"
                       item-text="name"
                       item-value="id"
@@ -206,45 +217,27 @@
                       ref="amount"
                       label="Valor*"
                       required
-                      v-model="expAmount"
+                      v-model="incomeAmount"
                       v-money="money"
-                    >
+                      >{{ incomeAmount }}
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
                       label="Vencimento*"
                       type="date"
-                      v-model="expDueDate"
+                      v-model="incomeDueDate"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field
-                      label="Número de parcelas*"
-                      type="number"
-                      v-model="expInstallments"
-                      :value="1"
-                      min="1"
-                    ></v-text-field>
-                  </v-col>
+                  <v-col cols="12" sm="6" md="6"> </v-col>
                   <v-checkbox
                     class="ml-4"
-                    v-model="expFlFixed"
+                    v-model="incomeFlFixed"
                     label="Despesa fixa"
                   ></v-checkbox>
                   <v-checkbox
                     class="ml-4"
-                    v-model="expFlSplit"
-                    label="Dividir despesa"
-                  ></v-checkbox>
-                  <v-checkbox
-                    class="ml-4"
-                    v-model="expFlEssential"
-                    label="Despesa essencial"
-                  ></v-checkbox>
-                  <v-checkbox
-                    class="ml-4"
-                    v-model="expFlPay"
+                    v-model="incomeFlPay"
                     label="Dar baixa"
                   ></v-checkbox>
                 </v-row>
@@ -253,10 +246,14 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="modalStore = false">
+              <v-btn color="blue darken-1" text @click="closeResetFormIncome()">
                 Close
               </v-btn>
-              <v-btn color="blue darken-1" text @click="createExpense()">
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="saveFormAndCreateIncome()"
+              >
                 Save
               </v-btn>
             </v-card-actions>
@@ -264,7 +261,7 @@
         </v-dialog>
       </v-row>
     </template>
-    <!-- MODAL EDIT EXPENSE -->
+    <!-- MODAL EDIT INCOME -->
     <template>
       <v-row justify="center">
         <v-dialog v-model="modalEdit" persistent max-width="600px">
@@ -279,31 +276,33 @@
                     <v-text-field
                       label="Nome da despesa*"
                       required
-                      v-model="expName"
+                      v-model="incomeName"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
                       label="Descrição"
-                      v-model="expDescription"
+                      v-model="incomeDescription"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-select
                       label="Categoria*"
                       required
-                      v-model="expCategoryId"
+                      v-model="incomeCategoryId"
                       :items="categories.categories.data"
                       item-text="name"
                       item-value="id"
-                      v-on:change="getSubcategories(expCategoryId)"
+                      v-on:change="
+                        getSubcategoriesByCategoryForForm(incomeCategoryId)
+                      "
                     >
                     </v-select>
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-select
                       label="Subcategoria*"
-                      v-model="expSubCategoryId"
+                      v-model="incomeSubcategoryId"
                       :items="subcategoriesByCategory"
                       item-text="name"
                       item-value="id"
@@ -315,7 +314,7 @@
                       ref="amount"
                       label="Valor*"
                       required
-                      v-model.lazy="expAmount"
+                      v-model.lazy="incomeAmount"
                       v-money="money"
                     >
                     </v-text-field>
@@ -324,38 +323,18 @@
                     <v-text-field
                       label="Vencimento*"
                       type="date"
-                      v-model="expDueDate"
+                      v-model="incomeDueDate"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field
-                      disabled
-                      label="Número de parcelas*"
-                      type="number"
-                      v-model="expInstallments"
-                      :value="1"
-                      min="1"
-                    ></v-text-field>
-                  </v-col>
+                  <v-col cols="12" sm="6" md="6"> </v-col>
                   <v-checkbox
                     class="ml-4"
-                    v-model="expFlFixed"
+                    v-model="incomeFlFixed"
                     label="Despesa fixa"
                   ></v-checkbox>
                   <v-checkbox
-                    disabled
                     class="ml-4"
-                    v-model="expFlSplit"
-                    label="Dividir despesa"
-                  ></v-checkbox>
-                  <v-checkbox
-                    class="ml-4"
-                    v-model="expFlEssential"
-                    label="Despesa essencial"
-                  ></v-checkbox>
-                  <v-checkbox
-                    class="ml-4"
-                    v-model="expFlPay"
+                    v-model="incomeFlPay"
                     label="Dar baixa"
                   ></v-checkbox>
                 </v-row>
@@ -364,15 +343,10 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="modalEdit = false"
-                @click.prevent="closeResetFormExp()"
-              >
+              <v-btn color="blue darken-1" text @click="closeResetFormIncome()">
                 Close
               </v-btn>
-              <v-btn color="blue darken-1" text @click="saveEditExpense()">
+              <v-btn color="blue darken-1" text @click="saveFormEditIncome()">
                 Save
               </v-btn>
             </v-card-actions>
@@ -386,7 +360,7 @@
         <v-dialog v-model="modalDelete" persistent max-width="400">
           <v-card>
             <v-card-title class="headline">
-              Deseja deletar a categoria ?
+              Deseja deletar essa receita ?
             </v-card-title>
             <v-card-text> Essa operação não poderá ser desfeita </v-card-text>
             <v-card-actions>
@@ -394,7 +368,11 @@
               <v-btn color="grey" text @click="modalDelete = false">
                 Fechar
               </v-btn>
-              <v-btn color="error" text @click.prevent="removeExpense()">
+              <v-btn
+                color="error"
+                text
+                @click.prevent="saveFormAndRemoveIncome()"
+              >
                 Deletar
               </v-btn>
             </v-card-actions>
@@ -421,32 +399,29 @@ export default {
     selected: [],
     selectAll: false,
     subcategoriesByCategory: [],
-    month: 1,
-    year: 2021,
+    month: null,
+    year: null,
     modalStore: false,
     modalInfo: false,
     modalDelete: false,
     modalEdit: false,
-    expId: null,
+    incomeId: null,
     // userId: 1,
-    expName: "",
-    expDescription: "",
-    expCategoryId: null,
-    expSubcategoryId: null,
-    expAmount: null,
-    expDueDate: null,
-    expInstallments: null,
-    expFlFixed: false,
-    expFlEssential: false,
-    expFlPay: false,
-    expFlSplit: false,
+    incomeName: "",
+    incomeDescription: "",
+    incomeCategoryId: null,
+    incomeSubcategoryId: null,
+    incomeAmount: null,
+    incomeDueDate: null,
+    incomeFlFixed: false,
+    incomeFlPay: false,
   }),
 
   directives: { money: VMoney },
 
   created() {
     this.setDateToday();
-    this.getExpensesByMonthFromState();
+    this.getIncomesByMonthFromState();
     this.getCategories();
     this.getAllSubcategories();
   },
@@ -455,8 +430,9 @@ export default {
     ...mapState({
       categories: (state) => state.categories,
       subcategories: (state) => state.subcategories,
-      expenses: (state) => state.expenses,
+      incomes: (state) => state.incomes,
       loading: (state) => state.preloader,
+      me: (state) => state.auth.me,
     }),
   },
 
@@ -465,46 +441,57 @@ export default {
       "getCategories",
       "getAllSubcategories",
       "getSubcategoriesByCategory",
-      "getExpensesByMonth",
-      "storeExpense",
-      "deleteExpense",
-      "actionPayExpensesSelected",
-      "updateExpense",
+      "getIncomesByMonth",
+      "storeIncome",
+      "deleteIncome",
+      "actionPayIncomesSelected",
+      "updateIncome",
     ]),
 
-    ...mapMutations(["STORE_EXPENSE"]),
+    ...mapMutations(["STORE_INCOME"]),
 
     ...mapGetters([]),
 
-    prev() {
+    prevControlMonth() {
       this.month--;
       if (this.month === 0) {
         this.month = 12;
         this.year--;
       }
-      this.getExpensesByMonthFromState();
+      this.getIncomesByMonthFromState();
     },
-    next() {
+    nextControlMonth() {
       this.month++;
       if (this.month === 13) {
         this.month = 1;
         this.year++;
       }
-      this.getExpensesByMonthFromState();
+      this.getIncomesByMonthFromState();
     },
 
-    getExpensesByMonthFromState() {
-      this.resetExpensesState();
+    getIncomesByMonthFromState() {
+      this.resetIncomesState();
       const monthYear = this.formatDateYearMonth();
-      const params = {
-        due_date: monthYear,
-      };
 
-      this.getExpensesByMonth(params);
+      if (this.me.id === "") {
+        setTimeout(() => {
+          const params = {
+            userId: this.me.id,
+            due_date: monthYear,
+          };
+          this.getIncomesByMonth(params);
+        }, 3000);
+      } else {
+        const params = {
+          userId: this.me.id,
+          due_date: monthYear,
+        };
+        this.getIncomesByMonth(params);
+      }
     },
 
-    resetExpensesState() {
-      this.expenses.expenses = [];
+    resetIncomesState() {
+      this.incomes.incomes = [];
     },
 
     setDateToday() {
@@ -519,36 +506,34 @@ export default {
       return date;
     },
 
-    closeResetFormExpense() {
+    closeResetFormIncome() {
       this.modalStore = false;
-      this.expId = null;
+      this.modalEdit = false;
+      this.incomeId = null;
       // this. userId: 1,
-      this.expName = "";
-      this.expDescription = "";
-      this.expCategoryId = null;
-      this.expSubcategoryId = null;
-      this.expAmount = 0;
-      this.expDueDate = null;
-      this.expInstallments = null;
-      this.expFlFixed = false;
-      this.expFlEssential = false;
-      this.expFlPay = false;
-      this.expFlSplit = false;
+      this.incomeName = null;
+      this.incomeDescription = null;
+      this.incomeCategoryId = null;
+      this.incomeSubcategoryId = null;
+      this.incomeAmount = 0;
+      this.incomeDueDate = null;
+      this.incomeFlFixed = false;
+      this.incomeFlPay = false;
       this.subcategoriesByCategory = [];
     },
 
-    select() {
+    selectItemsReceived() {
       this.selected = [];
       if (!this.selectAll) {
-        for (var i = 0; i <= this.$store.state.expenses.expenses.length; i++) {
-          if (!this.$store.state.expenses.expenses[i].fl_pay) {
-            this.selected.push(this.$store.state.expenses.expenses[i].id);
+        for (var i = 0; i <= this.$store.state.incomes.incomes.length; i++) {
+          if (!this.$store.state.incomes.incomes[i].fl_pay) {
+            this.selected.push(this.$store.state.incomes.incomes[i].id);
           }
         }
       }
     },
 
-    getSubcategories(id) {
+    getSubcategoriesByCategoryForForm(id) {
       this.subcategoriesByCategory = [];
       for (var i = 0; i < this.subcategories.subcategories.data.length; i++) {
         if (this.subcategories.subcategories.data[i].category_id === id) {
@@ -559,17 +544,17 @@ export default {
       }
     },
 
-    totalExpenses() {
+    sumTotalIncomes() {
       let total = 0;
-      this.expenses.expenses.map((item, index) => {
+      this.incomes.incomes.map((item, index) => {
         total = total + parseFloat(item.amount);
       });
       return total;
     },
 
-    totalToPayExpenses() {
+    sumTotalWillReceiveIncomes() {
       let totalToPay = 0;
-      this.expenses.expenses.map((item, index) => {
+      this.incomes.incomes.map((item, index) => {
         if (!item.fl_pay) {
           totalToPay = totalToPay + parseFloat(item.amount);
         }
@@ -577,9 +562,9 @@ export default {
       return totalToPay;
     },
 
-    totalPaidExpenses() {
+    sumTotalReceivedIncomes() {
       let totalPaid = 0;
-      this.expenses.expenses.map((item, index) => {
+      this.incomes.incomes.map((item, index) => {
         if (item.fl_pay) {
           totalPaid = totalPaid + parseFloat(item.amount);
         }
@@ -587,24 +572,24 @@ export default {
       return totalPaid;
     },
 
-    createExpense() {
+    saveFormAndCreateIncome() {
       const params = {
-        category_id: this.expCategoryId,
-        subcategory_id: this.expSubCategoryId,
-        name: this.expName,
-        amount: this.expAmount,
+        category_id: this.incomeCategoryId,
+        subcategory_id: this.incomeSubcategoryId,
+        name: this.incomeName,
+        amount: this.incomeAmount,
         installments: this.expInstallments,
-        due_date: this.expDueDate,
-        fl_pay: this.expFlPay,
-        description: this.expDescription,
-        fl_fixed: this.expFlFixed,
+        due_date: this.incomeDueDate,
+        fl_pay: this.incomeFlPay,
+        description: this.incomeDescription,
+        fl_fixed: this.incomeFlFixed,
         fl_essential: this.expFlEssential,
         fl_split: this.expFlSplit,
       };
-      this.storeExpense(params)
-        .then(this.getExpensesByMonthFromState)
+      this.storeIncome(params)
+        .then(this.getIncomesByMonthFromState)
         .finally(
-          this.closeResetFormExpense(),
+          this.closeResetFormIncome(),
           setTimeout(() => {
             this.$swal({
               toast: true,
@@ -618,12 +603,12 @@ export default {
         );
     },
 
-    removeExpense() {
+    saveFormAndRemoveIncome() {
       const params = {
-        id: this.expId,
+        id: this.incomeId,
       };
-      this.deleteExpense(params).then(
-        this.close(),
+      this.deleteIncome(params).then(
+        this.closeForm(),
         this.$swal({
           toast: true,
           position: "bottom-end",
@@ -635,46 +620,40 @@ export default {
       );
     },
 
-    openModalEditExpense(expense) {
-      this.getSubcategories(expense.category_id);
-      this.expId = expense.id;
+    openModalEditIncome(income) {
+      this.getSubcategoriesByCategoryForForm(income.category_id);
+      this.incomeId = income.id;
       // this. userId: 1,
-      this.expName = expense.name;
-      this.expDescription = expense.description;
-      this.expCategoryId = expense.category_id;
-      this.expSubcategoryId = expense.subcategory_id;
-      this.expAmount = expense.amount;
-      this.expDueDate = expense.due_date;
-      this.expInstallments = expense.installments;
-      this.expFlFixed = expense.fl_fixed;
-      this.expFlEssential = expense.fl_essential;
-      this.expFlPay = expense.fl_pay;
-      this.expFlSplit = expense.fl_split;
+      this.incomeName = income.name;
+      this.incomeDescription = income.description;
+      this.incomeCategoryId = income.category_id;
+      this.incomeSubcategoryId = income.subcategory_id;
+      this.incomeAmount = income.amount;
+      this.incomeDueDate = income.due_date;
+      this.incomeFlFixed = income.fl_fixed;
+      this.incomeFlPay = income.fl_pay;
       this.modalEdit = true;
 
-      this.setAmountInVMoneyPlugin(expense.amount);
+      this.setAmountInVMoneyPlugin(income.amount);
     },
 
-    saveEditExpense() {
+    saveFormEditIncome() {
       const params = {
-        id: this.expId,
-        category_id: this.expCategoryId,
-        subcategory_id: this.expSubCategoryId,
-        name: this.expName,
-        amount: this.expAmount,
-        installments: this.expInstallments,
-        due_date: this.expDueDate,
-        fl_pay: this.expFlPay,
-        description: this.expDescription,
-        fl_fixed: this.expFlFixed,
-        fl_essential: this.expFlEssential,
-        fl_split: this.expFlSplit,
+        id: this.incomeId,
+        category_id: this.incomeCategoryId,
+        subcategory_id: this.incomeSubcategoryId,
+        name: this.incomeName,
+        amount: this.incomeAmount,
+        due_date: this.incomeDueDate,
+        fl_pay: this.incomeFlPay,
+        description: this.incomeDescription,
+        fl_fixed: this.incomeFlFixed,
       };
 
-      this.updateExpense(params)
-        .then(this.getExpensesByMonthFromState)
+      this.updateIncome(params)
+        .then(this.getIncomesByMonthFromState)
         .finally(
-          (this.modalEdit = false),
+          this.closeResetFormIncome(),
           setTimeout(() => {
             this.$swal({
               toast: true,
@@ -688,12 +667,12 @@ export default {
         );
     },
 
-    payExpensesSelected() {
+    receiveIncomesSelected() {
       const params = [];
       for (var i = 0; i < this.selected.length; i++) {
         params.push({ id: this.selected[i] });
       }
-      this.actionPayExpensesSelected(params).finally(
+      this.actionPayIncomesSelected(params).finally(
         setTimeout(() => {
           this.$swal({
             toast: true,
@@ -707,31 +686,20 @@ export default {
       );
     },
 
-    close() {
+    closeForm() {
       this.modalStore = false;
       this.modalDelete = false;
-      this.expId = null;
+      this.incomeId = null;
     },
 
-    closeResetFormExp() {
-      this.modalStore = false;
-      this.modalEdit = false;
-      this.expId = null;
-      // this. userId: 1,
-      this.expName = null;
-      this.expDescription = null;
-      this.expCategoryId = null;
-      this.expSubcategoryId = null;
-      this.expAmount = 0;
-      this.expDueDate = null;
-      this.expFlFixed = false;
-      this.expFlPay = false;
-      this.subcategoriesByCategory = [];
-    },
+    // formatPrice (value) {
+    //   const val = (value / 1).toFixed(2).replace('.', ',')
+    //   return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    // },
 
     setAmountInVMoneyPlugin(amount) {
       this.$refs.amount.$el.getElementsByTagName("input")[0].value = amount;
-      this.expAmount = amount;
+      this.incomeAmount = amount;
     },
   },
 };

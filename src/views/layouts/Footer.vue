@@ -1,8 +1,9 @@
 <template>
   <v-footer
     id="dashboard-core-footer"
+    style="background: #FAFAFA"
   >
-    <v-container>
+    <v-container >
       <v-row
         align="center"
         no-gutters

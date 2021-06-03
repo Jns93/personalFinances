@@ -17,10 +17,12 @@ import router from './router'
 import store from './store/index'
 import './plugins/base'
 import './plugins/chartist'
-import './plugins/vee-validate'
+// import './plugins/vee-validate'
 import './plugins/axios'
 import vuetify from './plugins/vuetify'
 import VueSweetalert2 from 'vue-sweetalert2'
+// import VeeValidate from 'vee-validate';
+import Notifications from 'vue-notification'
 
 Vue.config.productionTip = false
 
@@ -33,9 +35,16 @@ return `R$ ${parseFloat(valor).toFixed(2)}`.replace('.', ',')
 Vue.use(require('vue-moment'))
 Vue.use(require('vue-chartist'))
 
+Vue.use(Notifications)
+
+// Vue.use(VeeValidate);
+
+
 new Vue({
   router,
   store,
   vuetify,
   render: h => h(App),
 }).$mount('#app')
+
+store.dispatch('getMe')

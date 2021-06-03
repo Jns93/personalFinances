@@ -6,21 +6,20 @@
     :expand-on-hover="expandOnHover"
     :right="$vuetify.rtl"
     mobile-breakpoint="960"
-    color="grey darken-4"
+    :src="barImage"
     app
     width="260"
     v-bind="$attrs"
     disable-route-watcher
 
   >
-    <!-- <template v-slot:img="props">
+    <template v-slot:img="props">
       <v-img
         :gradient="`to bottom, ${barColor}`"
         v-bind="props"
       />
-    </template> -->
+    </template>
 
-    <v-divider class="mb-1" />
 
     <v-list
       dense
@@ -33,12 +32,12 @@
           contain
         >
           <v-img
-            src="https://demos.creative-tim.com/vuetify-material-dashboard/favicon.ico"
             max-height="30"
           />
         </v-list-item-avatar>
 
-        <v-list-item-content>
+      <v-list-item-content>
+          <v-spacer></v-spacer>
           <v-list-item-title
             class="display-1"
             v-text="profile.title"
@@ -53,9 +52,9 @@
       expand
       nav
     >
-      <!-- Style cascading bug  -->
-      <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
-      <div />
+
+
+
 
       <template v-for="(item, i) in computedItems">
         <base-item-group
@@ -73,9 +72,7 @@
         />
       </template>
 
-      <!-- Style cascading bug  -->
-      <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
-      <div />
+
     </v-list>
 
     <v-list>
@@ -119,12 +116,12 @@
         {
           icon: 'mdi-view-dashboard',
           title: 'dashboard',
-          to: '/',
+          to: '/dashboard',
         },
         {
           icon: 'mdi-arrow-top-right',
           title: 'Receitas',
-          to: '/pages/receitas',
+          to: '/receitas',
         },
         {
           title: 'Despesas',
@@ -134,23 +131,23 @@
         {
           title: 'Categorias',
           icon: 'mdi-format-font',
-          to: 'categories',
+          to: '/categories',
         },
-        {
-          title: 'Agendamentos',
-          icon: 'mdi-chart-bubble',
-          to: '/components/icons',
-        },
-        {
-          title: 'Relatórios',
-          icon: 'mdi-map-marker',
-          to: '/maps/google-maps',
-        },
-        {
-          title: 'notifications',
-          icon: 'mdi-bell',
-          to: '/components/notifications',
-        },
+        // {
+        //   title: 'Agendamentos',
+        //   icon: 'mdi-chart-bubble',
+        //   to: '/components/icons',
+        // },
+        // {
+        //   title: 'Relatórios',
+        //   icon: 'mdi-map-marker',
+        //   to: '/maps/google-maps',
+        // },
+        // {
+        //   title: 'notifications',
+        //   icon: 'mdi-bell',
+        //   to: '/components/notifications',
+        // },
       ],
     }),
 
@@ -170,7 +167,7 @@
       profile () {
         return {
           avatar: true,
-          title: 'avatar',
+          title: 'Finanças pessoais',
         }
       },
     },
@@ -200,6 +197,7 @@
         justify-content: center
         text-align: center
         width: 20px
+        color: white
 
         +ltr()
           margin-right: 24px

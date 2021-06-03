@@ -4,6 +4,7 @@
     id="categories"
     fluid
     tag="section"
+    style="height: 90%; background: #FAFAFA"
   >
     <v-row>
       <v-spacer></v-spacer>

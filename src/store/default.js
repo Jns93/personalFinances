@@ -2,6 +2,9 @@ export const state = {
   drawer: null,
   preloader: false,
   textpreloader: 'Carregando...',
+  barImage: 'https://demos.creative-tim.com/material-dashboard/assets/img/sidebar-3.jpg',
+  barColor: 'rgba(0, 0, 5, .8), rgba(0, 0, 5, .8)',
+
 }
 
 export const mutations = {
