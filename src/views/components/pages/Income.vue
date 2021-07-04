@@ -52,7 +52,6 @@
             v-bind="attrs"
             v-on="on"
             @click.prevent="modalStore = true"
-            @click="setAmountInVMoneyPlugin(0)"
           >
             <v-icon dark> mdi-plus </v-icon>
           </v-btn>
@@ -115,6 +114,7 @@
             </td>
             <td class="text-center">
               <v-btn
+                small
                 icon
                 color="grey"
                 @click="incomeSubcategoryId = income.subcategory_id"
@@ -123,6 +123,7 @@
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
               <v-btn
+                small
                 icon
                 color="grey"
                 @click="modalDelete = true"
@@ -218,7 +219,7 @@
                       label="Valor*"
                       required
                       v-model="incomeAmount"
-                      v-money="money"
+                      v-money
                       >{{ incomeAmount }}
                     </v-text-field>
                   </v-col>
@@ -315,7 +316,7 @@
                       label="Valor*"
                       required
                       v-model.lazy="incomeAmount"
-                      v-money="money"
+                      v-money
                     >
                     </v-text-field>
                   </v-col>
@@ -384,18 +385,11 @@
 </template>
 
 <script>
-import { VMoney } from "v-money";
 import { mapActions, mapState, mapMutations, mapGetters } from "vuex";
 import moment from "moment";
 
 export default {
   data: () => ({
-    money: {
-      decimal: ",",
-      thousands: ".",
-      precision: 2,
-      masked: false,
-    },
     selected: [],
     selectAll: false,
     subcategoriesByCategory: [],
@@ -416,8 +410,6 @@ export default {
     incomeFlFixed: false,
     incomeFlPay: false,
   }),
-
-  directives: { money: VMoney },
 
   created() {
     this.setDateToday();
@@ -623,7 +615,6 @@ export default {
     openModalEditIncome(income) {
       this.getSubcategoriesByCategoryForForm(income.category_id);
       this.incomeId = income.id;
-      // this. userId: 1,
       this.incomeName = income.name;
       this.incomeDescription = income.description;
       this.incomeCategoryId = income.category_id;
@@ -633,8 +624,6 @@ export default {
       this.incomeFlFixed = income.fl_fixed;
       this.incomeFlPay = income.fl_pay;
       this.modalEdit = true;
-
-      this.setAmountInVMoneyPlugin(income.amount);
     },
 
     saveFormEditIncome() {
@@ -697,10 +686,10 @@ export default {
     //   return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     // },
 
-    setAmountInVMoneyPlugin(amount) {
-      this.$refs.amount.$el.getElementsByTagName("input")[0].value = amount;
-      this.incomeAmount = amount;
-    },
+    // setAmountInVMoneyPlugin(amount) {
+    //   this.$refs.amount.$el.getElementsByTagName("input")[0].value = amount;
+    //   this.incomeAmount = amount;
+    // },
   },
 };
 </script>

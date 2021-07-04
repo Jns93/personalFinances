@@ -75,7 +75,7 @@
             <th class="font-weight-bold">Data de cadastro</th>
             <th class="font-weight-bold">Vencimento</th>
             <th class="font-weight-bold">Status</th>
-            <th class="font-weight-bold text-center">Ações</th>
+            <th class="font-weight-bold">Ações</th>
             <th class="font-weight-bold text-right">Valor</th>
           </tr>
         </thead>
@@ -103,8 +103,9 @@
                 {{ expense.installments[0].fl_pay ? "Pago" : "Á pagar" }}
               </v-chip>
             </td>
-            <td class="text-center">
+            <td>
               <v-btn
+                small
                 icon
                 color="grey"
                 @click="subcategoryId = expense.subcategory_id"
@@ -113,6 +114,7 @@
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
               <v-btn
+                small
                 icon
                 color="grey"
                 @click="modalDelete = true"
