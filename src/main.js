@@ -23,11 +23,12 @@ import vuetify from './plugins/vuetify'
 import VueSweetalert2 from 'vue-sweetalert2'
 // import VeeValidate from 'vee-validate';
 import Notifications from 'vue-notification'
+import money from  'vuejs-money'
 
 Vue.config.productionTip = false
 
 Vue.use(VueSweetalert2)
-
+Vue.use(money)
 Vue.filter('money', valor => {
 return `R$ ${parseFloat(valor).toFixed(2)}`.replace('.', ',')
 })

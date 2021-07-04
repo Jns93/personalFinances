@@ -47,7 +47,6 @@
             v-bind="attrs"
             v-on="on"
             @click.prevent="modalStore = true"
-            @click="setAmountInVMoneyPlugin(0)"
           >
             <v-icon dark> mdi-plus </v-icon>
           </v-btn>
@@ -86,9 +85,9 @@
             <td>
               <label class="form-checkbox">
                 <input
-                  :disabled="expense.fl_pay == true"
+                  :disabled="expense.installments[0].fl_pay == true"
                   type="checkbox"
-                  :value="expense.id"
+                  :value="expense.installments[0].id"
                   v-model="selected"
                 />
                 <i class="form-icon"></i>
@@ -98,10 +97,10 @@
             <td>{{ expense.description }}</td>
             <td>{{ expense.category.name }}</td>
             <td>{{ expense.created_at | moment("DD/MM/YYYY") }}</td>
-            <td>{{ expense.due_date | moment("DD/MM/YYYY") }}</td>
+            <td>{{ expense.installments[0].due_date | moment("DD/MM/YYYY") }}</td>
             <td>
-              <v-chip small :color="expense.fl_pay ? 'success' : 'error'">
-                {{ expense.fl_pay ? "Pago" : "Á pagar" }}
+              <v-chip small :color="expense.installments[0].fl_pay ? 'success' : 'error'">
+                {{ expense.installments[0].fl_pay ? "Pago" : "Á pagar" }}
               </v-chip>
             </td>
             <td class="text-center">
@@ -117,13 +116,13 @@
                 icon
                 color="grey"
                 @click="modalDelete = true"
-                @click.prevent="expId = expense.id"
+                @click.prevent="expId = expense.id; installmentId = expense.installments[0].id"
               >
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </td>
             <td class="text-right">
-              {{ expense.amount | money }}
+              {{ expense.installments[0].amount | money }}
             </td>
           </tr>
         </tbody>
@@ -145,10 +144,10 @@
             </tr>
           </template>
           <tr>
-            <span>
+            <!-- <span>
               Á pagar: {{ totalToPayExpenses() | money }} <br />
               Pago: {{ totalPaidExpenses() | money }}
-            </span>
+            </span> -->
           </tr>
         </v-tooltip>
       </v-simple-table>
@@ -206,8 +205,8 @@
                       ref="amount"
                       label="Valor*"
                       required
-                      v-model="expAmount"
-                      v-money="money"
+                      v-model="installmentAmount"
+                      v-money
                     >
                     </v-text-field>
                   </v-col>
@@ -215,7 +214,7 @@
                     <v-text-field
                       label="Vencimento*"
                       type="date"
-                      v-model="expDueDate"
+                      v-model="installmentDueDate"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
@@ -228,6 +227,7 @@
                     ></v-text-field>
                   </v-col>
                   <v-checkbox
+                    v-if="me.id === 1 || me.id ===2"
                     class="ml-4"
                     v-model="expFlSplit"
                     label="Dividir despesa"
@@ -239,7 +239,7 @@
                   ></v-checkbox>
                   <v-checkbox
                     class="ml-4"
-                    v-model="expFlPay"
+                    v-model="installmentFlPay"
                     label="Dar baixa"
                   ></v-checkbox>
                 </v-row>
@@ -314,16 +314,15 @@
                       ref="amount"
                       label="Valor*"
                       required
-                      v-model.lazy="expAmount"
-                      v-money="money"
-                    >
+                      v-model="installmentAmount"
+                      v-money                    >
                     </v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
                     <v-text-field
                       label="Vencimento*"
                       type="date"
-                      v-model="expDueDate"
+                      v-model="installmentDueDate"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="6">
@@ -354,7 +353,7 @@
                   ></v-checkbox>
                   <v-checkbox
                     class="ml-4"
-                    v-model="expFlPay"
+                    v-model="installmentFlPay"
                     label="Dar baixa"
                   ></v-checkbox>
                 </v-row>
@@ -405,18 +404,11 @@
 </template>
 
 <script>
-import { VMoney } from "v-money";
 import { mapActions, mapState, mapMutations, mapGetters } from "vuex";
 import moment from "moment";
 
 export default {
   data: () => ({
-    money: {
-      decimal: ",",
-      thousands: ".",
-      precision: 2,
-      masked: false,
-    },
     selected: [],
     selectAll: false,
     subcategoriesByCategory: [],
@@ -427,23 +419,20 @@ export default {
     modalDelete: false,
     modalEdit: false,
     expId: null,
-    // userId: 1,
+    installmentId: null,
     expName: "",
     expDescription: "",
     expCategoryId: null,
     subcategoryId: 0,
-    expAmount: null,
-    expDueDate: null,
+    installmentAmount: null,
+    installmentDueDate: null,
     expInstallments: 1,
     expFlFixed: false,
     expFlEssential: false,
-    expFlPay: false,
+    installmentFlPay: false,
     expFlSplit: false,
     isLoading: false
   }),
-
-  directives: { money: VMoney },
-
 
   created() {
     this.getCategories();
@@ -513,6 +502,7 @@ export default {
           due_date: monthYear,
         };
         this.getExpensesByMonth(params);
+
     }
     },
 
@@ -535,17 +525,17 @@ export default {
     closeResetFormExpense() {
       this.modalStore = false;
       this.expId = null;
-      // this. userId: 1,
       this.expName = "";
       this.expDescription = "";
       this.expCategoryId = null;
       this.subcategoryId = null;
-      this.expAmount = 0;
-      this.expDueDate = null;
+      this.installmentAmount = 0;
+      this.installmentDueDate = null;
       this.expInstallments = null;
       this.expFlFixed = false;
       this.expFlEssential = false;
-      this.expFlPay = false;
+      this.installmentFlPay = false;
+      this.installmentId = null;
       this.expFlSplit = false;
       this.subcategoriesByCategory = [];
     },
@@ -554,8 +544,8 @@ export default {
       this.selected = [];
       if (!this.selectAll) {
         for (var i = 0; i <= this.$store.state.expenses.expenses.length; i++) {
-          if (!this.$store.state.expenses.expenses[i].fl_pay) {
-            this.selected.push(this.$store.state.expenses.expenses[i].id);
+          if (!this.$store.state.expenses.expenses[i].installments[0].fl_pay) {
+            this.selected.push(this.$store.state.expenses.expenses[i].installments[0].id);
           }
         }
       }
@@ -576,7 +566,7 @@ export default {
     totalExpenses() {
       let total = 0;
       this.expenses.expenses.map((item, index) => {
-        total = total + parseFloat(item.amount);
+        total = total + parseFloat(item.installments[0].amount);
       });
       return total;
     },
@@ -584,8 +574,8 @@ export default {
     totalToPayExpenses() {
       let totalToPay = 0;
       this.expenses.expenses.map((item, index) => {
-        if (!item.fl_pay) {
-          totalToPay = totalToPay + parseFloat(item.amount);
+        if (!item.installments[0].fl_pay) {
+          totalToPay = totalToPay + parseFloat(item.installments[0].amount);
         }
       });
       return totalToPay;
@@ -594,8 +584,8 @@ export default {
     totalPaidExpenses() {
       let totalPaid = 0;
       this.expenses.expenses.map((item, index) => {
-        if (item.fl_pay) {
-          totalPaid = totalPaid + parseFloat(item.amount);
+        if (item.installments[0].fl_pay) {
+          totalPaid = totalPaid + parseFloat(item.installments[0].amount);
         }
       });
       return totalPaid;
@@ -603,13 +593,14 @@ export default {
 
     createExpense() {
       const params = {
+        user_id: this.me.id,
         category_id: this.expCategoryId,
         subcategory_id: this.subcategoryId,
         name: this.expName,
-        amount: this.expAmount,
+        amount: this.installmentAmount,
         installments: this.expInstallments,
-        due_date: this.expDueDate,
-        fl_pay: this.expFlPay,
+        due_date: this.installmentDueDate,
+        fl_pay: this.installmentFlPay,
         description: this.expDescription,
         fl_fixed: this.expFlFixed,
         fl_essential: this.expFlEssential,
@@ -634,7 +625,8 @@ export default {
 
     removeExpense() {
       const params = {
-        id: this.expId,
+        expense_id: this.expId,
+        id: this.installmentId
       };
       this.deleteExpense(params).then(
         this.close(),
@@ -652,21 +644,19 @@ export default {
     openModalEditExpense(expense) {
       this.getSubcategories(expense.category_id);
       this.expId = expense.id;
-      // this. userId: 1,
       this.expName = expense.name;
       this.expDescription = expense.description;
       this.expCategoryId = expense.category_id;
       this.subcategoryId = expense.subcategory_id;
-      this.expAmount = expense.amount;
-      this.expDueDate = expense.due_date;
-      this.expInstallments = expense.installments;
+      this.expInstallments = expense.installments[0].amount_installments;
       this.expFlFixed = expense.fl_fixed;
       this.expFlEssential = expense.fl_essential;
-      this.expFlPay = expense.fl_pay;
       this.expFlSplit = expense.fl_split;
+      this.installmentId = expense.installments[0].id;
+      this.installmentDueDate = expense.installments[0].due_date;
+      this.installmentAmount = expense.installments[0].amount;
+      this.installmentFlPay = expense.installments[0].fl_pay;
       this.modalEdit = true;
-
-      this.setAmountInVMoneyPlugin(expense.amount);
     },
 
     saveEditExpense() {
@@ -675,31 +665,49 @@ export default {
         category_id: this.expCategoryId,
         subcategory_id: this.subcategoryId,
         name: this.expName,
-        amount: this.expAmount,
-        installments: this.expInstallments,
-        due_date: this.expDueDate,
-        fl_pay: this.expFlPay,
+        amount: this.installmentAmount,
+        // installments: this.expInstallments,
+        // due_date: this.installmentDueDate,
+        // fl_pay: this.installmentFlPay,
         description: this.expDescription,
         fl_fixed: this.expFlFixed,
         fl_essential: this.expFlEssential,
         fl_split: this.expFlSplit,
+        installment: {
+          id: this.installmentId,
+          amount: this.installmentAmount,
+          due_date: this.installmentDueDate,
+          fl_pay: this.installmentFlPay,
+        }
       };
 
       this.updateExpense(params)
         .then(this.getExpensesByMonthFromState)
-        .finally(
-          (this.modalEdit = false),
-          setTimeout(() => {
-            this.$swal({
+        .catch((e) => {
+          console.log('error')
+          this.$swal({
               toast: true,
               position: "bottom-end",
               showConfirmButton: false,
               timer: 3000,
-              icon: "success",
-              title: "Operação concluida!",
+              icon: "error",
+              title: "Ocorreu um erro",
             });
+        })
+        .finally(
+          this.modalEdit = false,
+          this.closeResetFormExp(),
+          setTimeout(() => {
+              this.$swal({
+                toast: true,
+                position: "bottom-end",
+                showConfirmButton: false,
+                timer: 3000,
+                icon: "success",
+                title: "Operação concluida!",
+              })
           }, 4500)
-        );
+          );
     },
 
     payExpensesSelected() {
@@ -731,21 +739,15 @@ export default {
       this.modalStore = false;
       this.modalEdit = false;
       this.expId = null;
-      // this. userId: 1,
       this.expName = null;
       this.expDescription = null;
       this.expCategoryId = null;
       this.subcategoryId = null;
-      this.expAmount = 0;
-      this.expDueDate = null;
       this.expFlFixed = false;
-      this.expFlPay = false;
+      this.installmentAmount = 0;
+      this.installmentDueDate = null;
+      this.installmentFlPay = false;
       this.subcategoriesByCategory = [];
-    },
-
-    setAmountInVMoneyPlugin(amount) {
-      this.$refs.amount.$el.getElementsByTagName("input")[0].value = amount;
-      this.expAmount = amount;
     },
   },
 };

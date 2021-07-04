@@ -1,6 +1,6 @@
 export default {
   SET_EXPENSES (state, expenses) {
-    state.expenses = expenses
+    state.expenses = Object.values(expenses)
   },
 
   STORE_EXPENSE (state, expense) {
@@ -30,8 +30,8 @@ export default {
     for (var n = 0; n < expenses.length; n++) {
       for (var i = 0; i <= state.expenses.length; i++) {
         console.log(expenses[n].id)
-        if (state.expenses[i].id === expenses[n].id) {
-          state.expenses[i].fl_pay = 1
+        if (state.expenses[i].installments[0].id === expenses[n].id) {
+          state.expenses[i].installments[0].fl_pay = 1
           break
         }
       }
