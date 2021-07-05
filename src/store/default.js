@@ -54,4 +54,7 @@ export const getters = {
   months: (state) => {
     return state.months
   },
+  dateFilter: (state) => {
+    return state.dateFilter
+  },
 }

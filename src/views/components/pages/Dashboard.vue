@@ -377,6 +377,7 @@ export default {
     }),
     ...mapGetters({
       months: "months",
+      dateFilter: "dateFilter",
       totalAmountIncomes: "totalAmountIncomes",
       totalAmountExpenses: "totalAmountExpenses",
       percentOfSaving: "percentOfSaving",
@@ -428,11 +429,9 @@ export default {
     },
 
     getTotalIncomesByMonthFromState() {
-      const monthYear = this.formatDateYearMonthFromApi();
-
       const params = {
         userId: this.me.id,
-        due_date: monthYear,
+        due_date: this.dateFilter,
       };
 
       this.getTotalIncomesByMonth(params);
@@ -440,50 +439,45 @@ export default {
     },
 
     getTotalExpensesByMonthFromState() {
-      const monthYear = this.formatDateYearMonthFromApi();
-
       if(this.me.id === '') {
         setTimeout(() => {
           const params = {
           userId: this.me.id,
-          due_date: monthYear,
+          due_date: this.dateFilter,
       };
         this.getTotalExpensesByMonth(params);
         },3000);
       } else {
         const params = {
           userId: this.me.id,
-          due_date: monthYear
+          due_date: this.dateFilter
       }
       this.getTotalExpensesByMonth(params);
       }
     },
 
     getPercentageOfSavingsByMonthFromState() {
-      const monthYear = this.formatDateYearMonthFromApi();
       const params = {
         userId: this.me.id,
-        due_date: monthYear,
+        due_date: this.dateFilter,
       };
 
       this.getPercentageOfSavingsByMonth(params);
     },
 
     getBalanceByMonthFromState() {
-      const monthYear = this.formatDateYearMonthFromApi();
       const params = {
         userId: this.me.id,
-        due_date: monthYear,
+        due_date: this.dateFilter,
       };
 
       this.getBalanceByMonth(params);
     },
 
     getBalanceGoalByMonthFromState() {
-      const monthYear = this.formatDateYearMonthFromApi();
       const params = {
         userId: this.me.id,
-        due_date: monthYear,
+        due_date: this.dateFilter,
       };
 
       this.getBalanceGoalByMonth(params);
