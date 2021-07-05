@@ -7,21 +7,7 @@
     style="height: 90%; background: #fafafa"
   >
     <!-- CONTROLES MÊS E ANO -->
-    <v-row justify="center">
-      <v-btn class="mr-5" icon @click.prevent="prev">
-        <v-icon large> mdi-chevron-left </v-icon>
-      </v-btn>
-      <h2
-        class="font-weight-regular mt-1"
-        v-for="item in months"
-        :key="item.id"
-      >
-        {{ item[month - 1].name }} {{ year }}
-      </h2>
-      <v-btn class="ml-5" icon @click.prevent="next">
-        <v-icon large> mdi-chevron-right </v-icon>
-      </v-btn>
-    </v-row>
+    <date-filter></date-filter>
 
     <!-- INDICADORES DO MÊS -->
     <p class="font-weight-thin mb-0 mt-6">Indicadores do mês</p>
@@ -248,9 +234,11 @@
 import { VMoney } from "v-money";
 import { mapActions, mapState, mapMutations, mapGetters } from "vuex";
 import moment from "moment";
+import DateFilter from '../../layouts/DateFilter'
+
 export default {
   // name: 'DashboardDashboard',
-
+  components: { 'date-filter': DateFilter },
   data() {
     return {
       money: {
@@ -259,8 +247,6 @@ export default {
         precision: 2,
         masked: false,
       },
-      month: 1,
-      year: 2021,
       // incomesChart: {
       //   data: {
       //     labels: [],
@@ -366,19 +352,18 @@ export default {
 
   beforeCreate() {},
   created() {
-    this.setDateToday();
-    this.getTotalExpensesByMonthFromState();
     this.getTotalIncomesByMonthFromState();
+    this.getAverageIncomesByYearFromState();
+    this.getTotalExpensesByMonthFromState();
+    this.getAverageExpensesByYearFromState();
     this.getPercentageOfSavingsByMonthFromState();
+    this.getAveragePercentOfSavingByYearFromState();
     this.getBalanceByMonthFromState();
     this.getBalanceGoalByMonthFromState();
-    this.getAverageIncomesByYearFromState();
-    this.getAverageExpensesByYearFromState();
-    this.getAveragePercentOfSavingByYearFromState();
-    this.getIncomesYearChartFromState();
-    this.getExpensesYearChartFromState();
-    this.getIncomesToBeDueFromState();
-    this.getExpensesToBeDueFromState();
+    // this.getIncomesYearChartFromState();
+    // this.getExpensesYearChartFromState();
+    // this.getIncomesToBeDueFromState();
+    // this.getExpensesToBeDueFromState();
   },
 
   mounted() {},
@@ -438,47 +423,6 @@ export default {
       this.balance = null;
     },
 
-    setDateToday() {
-      const date = new Date();
-
-      this.year = date.getFullYear();
-      this.month = date.getMonth() + 1;
-    },
-
-    formatDateYearMonthFromApi() {
-      var date = moment(this.year + "-" + this.month).format("YYYY-MM");
-      return date;
-    },
-
-    prev() {
-      this.month--;
-      if (this.month === 0) {
-        this.month = 12;
-        this.year--;
-      }
-      this.getTotalExpensesByMonthFromState();
-      this.getTotalIncomesByMonthFromState();
-      this.getPercentageOfSavingsByMonthFromState();
-      this.getBalanceByMonthFromState();
-      this.getBalanceGoalByMonthFromState();
-      this.getAverageIncomesByYearFromState();
-      this.getExpensesYearChartFromState();
-    },
-    next() {
-      this.month++;
-      if (this.month === 13) {
-        this.month = 1;
-        this.year++;
-      }
-      this.getTotalExpensesByMonthFromState();
-      this.getTotalIncomesByMonthFromState();
-      this.getPercentageOfSavingsByMonthFromState();
-      this.getBalanceByMonthFromState();
-      this.getBalanceGoalByMonthFromState();
-      this.getAverageIncomesByYearFromState();
-      this.getExpensesYearChartFromState();
-    },
-
     applyFilterVmoney(value) {
       return this.$options.filters.money(value);
     },
@@ -498,7 +442,6 @@ export default {
     getTotalExpensesByMonthFromState() {
       const monthYear = this.formatDateYearMonthFromApi();
 
-
       if(this.me.id === '') {
         setTimeout(() => {
           const params = {
@@ -507,8 +450,13 @@ export default {
       };
         this.getTotalExpensesByMonth(params);
         },3000);
+      } else {
+        const params = {
+          userId: this.me.id,
+          due_date: monthYear
       }
-
+      this.getTotalExpensesByMonth(params);
+      }
     },
 
     getPercentageOfSavingsByMonthFromState() {

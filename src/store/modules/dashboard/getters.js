@@ -1,7 +1,4 @@
 export default {
-  months: (state) => {
-    return state.months
-  },
   totalAmountIncomes: (state) => {
     return state.totalAmountIncomes
   },

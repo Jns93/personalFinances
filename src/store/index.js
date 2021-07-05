@@ -7,7 +7,7 @@ import incomes from './modules/incomes'
 import dashboard from './modules/dashboard'
 import auth from './modules/auth/auth'
 
-import { state, mutations } from './default'
+import { state, mutations, getters, actions } from './default'
 
 Vue.use(Vuex)
 
@@ -22,6 +22,8 @@ const store = new Vuex.Store({
   },
   state,
   mutations,
+  getters,
+  actions
 })
 
 export default store
