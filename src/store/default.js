@@ -4,7 +4,6 @@ export const state = {
   textpreloader: 'Carregando...',
   barImage: 'https://demos.creative-tim.com/material-dashboard/assets/img/sidebar-3.jpg',
   barColor: 'rgba(0, 0, 5, .8), rgba(0, 0, 5, .8)',
-  dateFilter: null,
   months: {
     data: [
       { id: 1, name: 'Janeiro' },
@@ -40,10 +39,6 @@ export const mutations = {
   SET_TEXT_PRELOADER (state, text) {
     state.textpreloader = text
   },
-
-  SET_DATE_FILTER (state, date) {
-    state.dateFilter =  date
-  },
 }
 
 export const actions = {
@@ -53,8 +48,5 @@ export const actions = {
 export const getters = {
   months: (state) => {
     return state.months
-  },
-  dateFilter: (state) => {
-    return state.dateFilter
   },
 }

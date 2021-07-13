@@ -3,74 +3,32 @@
     id="dashboard"
     fluid
     tag="section"
-    v-if="!loading"
     style="height: 90%; background: #fafafa"
   >
-    <!-- CONTROLES MÊS E ANO -->
-    <date-filter></date-filter>
-
+    <div class="text-center">
+      <v-container
+      v-show="loading"
+        id="dashboard"
+        fluid
+        tag="section"
+        style="height: 90%; background: #fafafa"
+      >
+        <v-progress-circular
+          indeterminate
+          color="grey"
+          size="50"
+        ></v-progress-circular>
+        <h1 class="mt-3" style="color: grey">Carregando...</h1>
+      </v-container>
+    </div>
     <!-- INDICADORES DO MÊS -->
-    <p class="font-weight-thin mb-0 mt-6">Indicadores do mês</p>
+    <indicators-month v-show="!loading"></indicators-month>
 
-    <v-row>
-      <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card
-          color="green"
-          icon="mdi-arrow-top-right"
-          title="Receita"
-          :value="applyFilterVmoney(totalAmountIncomes)"
-          sub-icon="mdi-information-variant"
-          :sub-text="
-            'Média de rendimentos do ano: ' + applyFilterVmoney(averageIncomes)
-          "
-        />
-      </v-col>
-
-      <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card
-          color="red"
-          icon="mdi-arrow-bottom-left"
-          title="Despesas"
-          :value="applyFilterVmoney(totalAmountExpenses)"
-          sub-icon="mdi-information-variant"
-          :sub-text="
-            'Média de despesas do ano: ' + applyFilterVmoney(averageExpenses)
-          "
-        />
-      </v-col>
-      <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card
-          color="yellow"
-          icon="mdi-sack-percent"
-          title="Percentual econômico"
-          :value="percentOfSaving + '%'"
-          sub-icon="mdi-information-variant"
-          :sub-text="
-            'Percentual econômico médio: ' + averagePercentOfSaving + '%'
-          "
-        />
-      </v-col>
-
-      <v-col cols="12" sm="6" lg="3">
-        <base-material-stats-card
-          color="info"
-          icon="mdi-currency-usd"
-          title="Saldo"
-          :value="applyFilterVmoney(balance)"
-          sub-icon="mdi-bullseye-arrow"
-          :sub-text="
-            'Meta do mês: ' +
-            applyFilterVmoney(balanceGoal) +
-            ' (30% da sua renda)'
-          "
-        />
-      </v-col>
-    </v-row>
     <!-- INDICADORES DO ANO E AVISOS-->
-    <p class="font-weight-thin mb-0">Indicadores do ano</p>
-    <v-row>
+    <!-- <p class="font-weight-thin mb-0">Indicadores do ano</p>
+    <v-row> -->
       <!-- CHART DAILY -->
-      <v-col cols="12" lg="4">
+      <!-- <v-col cols="12" lg="4">
         <v-card class="mt-4 mx-auto">
           <v-sheet
             class="v-sheet--offset mx-auto"
@@ -128,9 +86,9 @@
             >
           </v-card-text>
         </v-card>
-      </v-col>
+      </v-col> -->
 
-      <v-col cols="12" lg="4">
+      <!-- <v-col cols="12" lg="4">
         <v-card class="mt-4 mx-auto">
           <v-sheet class="v-sheet--offset mx-auto" color="cyan" elevation="2">
             <v-sparkline
@@ -156,13 +114,12 @@
             >
           </v-card-text>
         </v-card>
-      </v-col>
+      </v-col> -->
 
-      <v-col cols="12" md="6">
+      <!-- <v-col cols="12" md="6">
         <base-material-card color="grey darken-4" class="px-5 py-3">
           <template v-slot:heading>
             <div class="display-2 font-weight-light">
-              <!-- <v-icon> mdi-alert </v-icon> -->
               Despesas próximas do vencimento
             </div>
           </template>
@@ -185,13 +142,12 @@
             </v-data-table>
           </v-card-text>
         </base-material-card>
-      </v-col>
+      </v-col> -->
 
-      <v-col cols="12" md="6">
+      <!-- <v-col cols="12" md="6">
         <base-material-card color="grey darken-4" class="px-5 py-3">
           <template v-slot:heading>
             <div class="display-2 font-weight-light">
-              <!-- <v-icon> mdi-arrow-bottom-left </v-icon> -->
               A receber
             </div>
           </template>
@@ -209,36 +165,23 @@
             </v-data-table>
           </v-card-text>
         </base-material-card>
-      </v-col>
+      </v-col> -->
     </v-row>
   </v-container>
-  <v-container
-    id="dashboard"
-    fluid
-    tag="section"
-    style="height: 90%; background: #fafafa"
-    v-else
-  >
-    <div class="text-center">
-      <v-progress-circular
-        indeterminate
-        color="grey"
-        size="50"
-      ></v-progress-circular>
-      <h1 class="mt-3" style="color: grey">Carregando...</h1>
-    </div>
-  </v-container>
+
 </template>
 
 <script>
 import { VMoney } from "v-money";
 import { mapActions, mapState, mapMutations, mapGetters } from "vuex";
 import moment from "moment";
-import DateFilter from '../../layouts/DateFilter'
+import IndicatorsMonth from './Dashboard/IndicatorsMonth.vue'
 
 export default {
   // name: 'DashboardDashboard',
-  components: { 'date-filter': DateFilter },
+  components: {
+    'indicators-month': IndicatorsMonth,
+   },
   data() {
     return {
       money: {
@@ -352,14 +295,15 @@ export default {
 
   beforeCreate() {},
   created() {
-    this.getTotalIncomesByMonthFromState();
-    this.getAverageIncomesByYearFromState();
-    this.getTotalExpensesByMonthFromState();
-    this.getAverageExpensesByYearFromState();
-    this.getPercentageOfSavingsByMonthFromState();
-    this.getAveragePercentOfSavingByYearFromState();
-    this.getBalanceByMonthFromState();
-    this.getBalanceGoalByMonthFromState();
+    this.$store.commit('SET_PRELOADER', true)
+    // this.getTotalIncomesByMonthFromState();
+    // this.getAverageIncomesByYearFromState();
+    // this.getTotalExpensesByMonthFromState();
+    // this.getAverageExpensesByYearFromState();
+    // this.getPercentageOfSavingsByMonthFromState();
+    // this.getAveragePercentOfSavingByYearFromState();
+    // this.getBalanceByMonthFromState();
+    // this.getBalanceGoalByMonthFromState();
     // this.getIncomesYearChartFromState();
     // this.getExpensesYearChartFromState();
     // this.getIncomesToBeDueFromState();
@@ -376,21 +320,21 @@ export default {
       me: (state) => state.auth.me,
     }),
     ...mapGetters({
-      months: "months",
-      dateFilter: "dateFilter",
-      totalAmountIncomes: "totalAmountIncomes",
-      totalAmountExpenses: "totalAmountExpenses",
-      percentOfSaving: "percentOfSaving",
-      balance: "balance",
-      balanceGoal: "balanceGoal",
-      averageIncomes: "averageIncomes",
-      averageExpenses: "averageExpenses",
-      averagePercentOfSaving: "averagePercentOfSaving",
-      //necessario colocar o sufixo getter pois houve conflito dentro do metodo getExpensesYearChartFromState
-      incomesYearChart: "incomesYearChart",
-      expensesYearChart: "expensesYearChart",
-      expensesToBeDue: "expensesToBeDue",
-      incomesToBeDue: "incomesToBeDue",
+      // months: "months",
+      // dateFilter: "dateFilter",
+      // totalAmountIncomes: "totalAmountIncomes",
+      // totalAmountExpenses: "totalAmountExpenses",
+      // percentOfSaving: "percentOfSaving",
+      // balance: "balance",
+      // balanceGoal: "balanceGoal",
+      // averageIncomes: "averageIncomes",
+      // averageExpenses: "averageExpenses",
+      // averagePercentOfSaving: "averagePercentOfSaving",
+      // //necessario colocar o sufixo getter pois houve conflito dentro do metodo getExpensesYearChartFromState
+      // incomesYearChart: "incomesYearChart",
+      // expensesYearChart: "expensesYearChart",
+      // expensesToBeDue: "expensesToBeDue",
+      // incomesToBeDue: "incomesToBeDue",
     }),
 
     expensesToBeDueItems: function () {

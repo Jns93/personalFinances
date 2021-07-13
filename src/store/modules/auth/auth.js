@@ -16,6 +16,7 @@ export default {
       state.me = me
 
       state.authenticated = true
+      console.log('me atualizado');
     },
 
     SET_AUTHENTICATED (state, status) {
@@ -82,4 +83,9 @@ export default {
     }
   },
 
+  getters: {
+    me: (state) => {
+      return state.me
+    }
+  }
 }

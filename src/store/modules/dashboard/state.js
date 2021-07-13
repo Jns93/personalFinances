@@ -16,29 +16,29 @@ export default {
   //   ],
   // },
 
-  totalAmountIncomes: {
-  },
+  // totalAmountIncomes: {
+  // },
 
-  totalAmountExpenses: {
-  },
+  // totalAmountExpenses: {
+  // },
 
-  percentOfSaving: {
-  },
+  // percentOfSaving: {
+  // },
 
-  balance: {
-  },
+  // balance: {
+  // },
 
-  balanceGoal: {
-  },
+  // balanceGoal: {
+  // },
 
-  averageIncomes: {
-  },
+  // averageIncomes: {
+  // },
 
-  averageExpenses: {
-  },
+  // averageExpenses: {
+  // },
 
-  averagePercentOfSaving: {
-  },
+  // averagePercentOfSaving: {
+  // },
 
   expensesYearChart: {
     data: {
@@ -57,4 +57,14 @@ export default {
   expensesToBeDue: {},
 
   incomesToBeDue: {},
+
+  totalIncomes: null,
+  totalExpenses: null,
+  percentOfSavings: null,
+  balance: null,
+  balanceGoal: null,
+  averageIncomes: null,
+  averageExpenses: null,
+  averagePercentOfSaving: null,
+  incomesYearChart: null
 }

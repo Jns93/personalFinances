@@ -1,4 +1,14 @@
 export default {
+  SET_INDICATORS_MONTH (state, indicators) {
+    console.log('SET_INDICATORS_MONTH =>', indicators);
+    state.totalExpenses = indicators.totalExpenses
+    state.totalIncomes = indicators.totalIncomes
+    state.balance = indicators.balance
+    state.percentOfSavings = indicators.percentOfSavings
+    state.balanceGoal = indicators.balanceGoal
+    state.averageIncomes = indicators.averageIncomes
+  },
+
   SET_TOTAL_AMOUNT_INCOMES_IN_STATE (state, totalIncomesAmount) {
     state.totalAmountIncomes = totalIncomesAmount
   },
@@ -8,13 +18,13 @@ export default {
     state.totalAmountExpenses = totalExpensesAmount
   },
 
-  SET_PERCENT_OF_SAVING_IN_STATE (state, percentOfSaving) {
-    state.percentOfSaving = percentOfSaving
-  },
+  // SET_PERCENT_OF_SAVING_IN_STATE (state, percentOfSaving) {
+  //   state.percentOfSaving = percentOfSaving
+  // },
 
-  SET_BALANCE_IN_STATE (state, balance) {
-    state.balance = balance
-  },
+  // SET_BALANCE_IN_STATE (state, balance) {
+  //   state.balance = balance
+  // },
 
   SET_BALANCE_GOAL_BY_MONTH_IN_STATE (state, balanceGoal) {
     state.balanceGoal = balanceGoal

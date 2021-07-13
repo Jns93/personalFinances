@@ -1,27 +1,34 @@
 export default {
-  totalAmountIncomes: (state) => {
-    return state.totalAmountIncomes
+ totalIncomes: (state) => {
+    return state.totalIncomes
   },
-  totalAmountExpenses: (state) => {
-    return state.totalAmountExpenses
+
+  totalExpenses: (state) => {
+    return state.totalExpenses
   },
-  percentOfSaving: (state) => {
-    return state.percentOfSaving
+
+  percentOfSavings: (state) => {
+    return state.percentOfSavings
   },
+
   balance: (state) => {
     return state.balance
   },
+
   balanceGoal: (state) => {
     return state.balanceGoal
   },
+
   averageIncomes: (state) => {
     return state.averageIncomes
   },
+
   averageExpenses: (state) => {
     return state.averageExpenses
   },
-  averagePercentOfSaving: (state) => {
-    return state.averagePercentOfSaving
+
+  averagePercentOfSavings: (state) => {
+    return state.averagePercentOfSavings
   },
 
   incomesYearChart: (state) => {
