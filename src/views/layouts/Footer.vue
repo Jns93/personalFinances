@@ -2,6 +2,7 @@
   <v-footer
     id="dashboard-core-footer"
     style="background: #FAFAFA"
+    height="auto"
   >
     <v-container >
       <v-row

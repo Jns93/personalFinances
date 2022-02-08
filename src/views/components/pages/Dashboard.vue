@@ -166,7 +166,7 @@
           </v-card-text>
         </base-material-card>
       </v-col> -->
-    </v-row>
+    <!-- </v-row> -->
   </v-container>
 
 </template>

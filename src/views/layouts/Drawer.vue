@@ -75,7 +75,7 @@
 
     </v-list>
 
-    <v-list>
+    <!-- <v-list>
       <v-divider class="mb-3" />
       <v-list-item
       class="align-self-center mr-5 ml-5"
@@ -91,7 +91,7 @@
               />
         </template>
       </v-list-item>
-    </v-list>
+    </v-list> -->
   </v-navigation-drawer>
 </template>
 

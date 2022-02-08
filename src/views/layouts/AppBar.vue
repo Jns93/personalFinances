@@ -5,7 +5,6 @@
     app
     color="#FAFAFA"
     flat
-    height="75"
   >
     <v-btn
       class="mr-3"

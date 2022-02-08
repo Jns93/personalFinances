@@ -1,9 +1,12 @@
 <template>
-  <v-main>
-    <router-view />
-
+  <v-app>
+    <v-main style="background: #fafafa">
+      <v-container flud>
+        <router-view />
+      </v-container>
+    </v-main>
     <dashboard-core-footer />
-  </v-main>
+  </v-app>
 </template>
 
 <script>
