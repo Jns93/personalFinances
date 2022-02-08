@@ -75,23 +75,6 @@
 
     </v-list>
 
-    <!-- <v-list>
-      <v-divider class="mb-3" />
-      <v-list-item
-      class="align-self-center mr-5 ml-5"
-      >
-        <template>
-          Dark Mode
-          <v-spacer />
-              <v-switch
-                v-model="$vuetify.theme.dark"
-                class="ma-0 pa-0"
-                color="indigo darken-3"
-                hide-details
-              />
-        </template>
-      </v-list-item>
-    </v-list> -->
   </v-navigation-drawer>
 </template>
 
