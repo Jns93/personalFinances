@@ -3,24 +3,25 @@
     id="dashboard"
     fluid
     tag="section"
-    style="height: 90%; background: #fafafa"
+    style="height: 90%; background: #fafafa; vertical-align: middle"
   >
-    <div class="text-center">
       <v-container
-      v-show="loading"
+        v-show="loading"
         id="dashboard"
         fluid
-        tag="section"
-        style="height: 90%; background: #fafafa"
+        fill-height
+        style="height: 80vh; background: #fafafa"
       >
-        <v-progress-circular
-          indeterminate
-          color="grey"
-          size="50"
-        ></v-progress-circular>
-        <h1 class="mt-3" style="color: grey">Carregando...</h1>
+        <v-row justify="center" align="center">
+          <v-progress-circular
+            indeterminate
+            color="grey"
+            size="40"
+          ></v-progress-circular>
+          <!-- <h4 class="mt-2 ml-2" style="color: grey">Carregando...</h4> -->
+
+        </v-row>
       </v-container>
-    </div>
     <!-- INDICADORES DO MÊS -->
     <indicators-month v-show="!loading"></indicators-month>
 
