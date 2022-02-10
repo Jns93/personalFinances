@@ -11,7 +11,7 @@
     width="260"
     v-bind="$attrs"
     disable-route-watcher
-    style="box-shadow: 1px 1px 3px black;"
+    style="box-shadow: 0.8px 1px 3px black;"
   >
     <template v-slot:img="props">
       <v-img
