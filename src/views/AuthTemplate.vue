@@ -1,7 +1,7 @@
 <template>
   <v-app>
 
-    <dashboard-core-view />
+    <login />
 
   </v-app>
 </template>
@@ -12,7 +12,7 @@
     name: 'AuthTemplate',
 
     components: {
-      DashboardCoreView: () => import('./layouts/View'),
+      Login: () => import('./components/auth/Login')
     },
 
   }
