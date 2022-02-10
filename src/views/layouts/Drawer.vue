@@ -15,7 +15,7 @@
   >
     <template v-slot:img="props">
       <v-img
-        :gradient="`to bottom, ${barColor}`"
+        :gradient="`to top, ${barColor}`"
         v-bind="props"
       />
     </template>
@@ -32,7 +32,8 @@
           contain
         >
           <v-img
-            max-height="30"
+            :src="require('@/assets/Finanças-pessoais.jpg')"
+            max-height="40"
           />
         </v-list-item-avatar>
 
@@ -52,10 +53,6 @@
       expand
       nav
     >
-
-
-
-
       <template v-for="(item, i) in computedItems">
         <base-item-group
           v-if="item.children"
@@ -112,15 +109,15 @@
           to: '/despesas',
         },
         {
+          title: 'Despesas recorrentes',
+          icon: 'mdi-chart-bubble',
+          to: '/components/icons',
+        },
+        {
           title: 'Categorias',
           icon: 'mdi-format-font',
           to: '/categories',
         },
-        // {
-        //   title: 'Agendamentos',
-        //   icon: 'mdi-chart-bubble',
-        //   to: '/components/icons',
-        // },
         // {
         //   title: 'Relatórios',
         //   icon: 'mdi-map-marker',

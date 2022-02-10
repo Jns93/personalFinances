@@ -3,7 +3,7 @@ export const state = {
   preloader: false,
   textpreloader: 'Carregando...',
   barImage: require('@/assets/image-bar.jpg'),
-  barColor: 'rgba(0, 0, 5, .10), rgba(0, 0, 5, .8)',
+  barColor: 'rgba(0, 0, 5, .10), rgba(0, 0, 5, .4)',
   months: {
     data: [
       { id: 1, name: 'Janeiro' },
