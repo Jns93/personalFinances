@@ -296,6 +296,7 @@ export default {
 
   beforeCreate() {},
   created() {
+    this.createRecurring();
     this.$store.commit('SET_PRELOADER', true)
     // this.getTotalIncomesByMonthFromState();
     // this.getAverageIncomesByYearFromState();
@@ -349,6 +350,7 @@ export default {
 
   methods: {
     ...mapActions([
+      "createRecurring",
       "getTotalIncomesByMonth",
       "getTotalExpensesByMonth",
       "getPercentageOfSavingsByMonth",

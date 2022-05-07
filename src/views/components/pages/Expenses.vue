@@ -489,23 +489,22 @@ export default {
       this.resetExpensesState();
 
       const monthYear = this.formatDateYearMonth();
-    if(this.me.id === '') {
-      setTimeout(() => {
+      if(this.me.id === '') {
+        setTimeout(() => {
+          const params = {
+            userId: this.me.id,
+            due_date: monthYear,
+          };
+          this.getExpensesByMonth(params);
+        }, 3000);
+      }
+      else {
         const params = {
-          userId: this.me.id,
-          due_date: monthYear,
-        };
-        this.getExpensesByMonth(params);
-      }, 3000);
-    }
-    else {
-      const params = {
-          userId: this.me.id,
-          due_date: monthYear,
-        };
-        this.getExpensesByMonth(params);
-
-    }
+            userId: this.me.id,
+            due_date: monthYear,
+          };
+          this.getExpensesByMonth(params);
+      }
     },
 
     resetExpensesState() {

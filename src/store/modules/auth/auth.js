@@ -51,12 +51,12 @@ export default {
                                   })
     },
 
-    getMe({ commit }) {
+    async getMe({ commit }) {
       const token = localStorage.getItem(TOKEN_NAME)
 
       if(!token) return;
 
-      return Vue.prototype.$http.get('/auth/me', {
+      return await Vue.prototype.$http.get('/auth/me', {
         headers: {
           'Authorization': `Bearer ${token}`
         }

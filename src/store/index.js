@@ -6,6 +6,7 @@ import expenses from './modules/expenses'
 import incomes from './modules/incomes'
 import dashboard from './modules/dashboard'
 import auth from './modules/auth/auth'
+import recurringExpenses from './modules/recurringExpenses'
 
 import { state, mutations, getters, actions } from './default'
 
@@ -19,6 +20,7 @@ const store = new Vuex.Store({
     incomes,
     dashboard,
     auth,
+    recurringExpenses
   },
   state,
   mutations,

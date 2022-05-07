@@ -2,6 +2,18 @@ import Vue from 'vue'
 import { TOKEN_NAME } from '@/configs/api'
 
 export default {
+  createRecurring({ commit }) {
+    const token = localStorage.getItem(TOKEN_NAME)
+    const headers = {
+      Authorization: `Bearer ${token}`
+    }
+    console.log('execute recurring expenses');
+    return Vue.prototype.$http('/recurringExpenses/execute', {headers})
+                            .then((res) => {
+                              result = res;
+                            });
+  },
+
   actionGetIndicatorsByMonth ({ commit }, params) {
     // console.log('actionGetIndicatorsByMonth =>', params)
     const token = localStorage.getItem(TOKEN_NAME)

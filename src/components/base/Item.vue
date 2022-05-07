@@ -4,7 +4,8 @@
     :rel="href && href !== '#' ? 'noopener' : undefined"
     :target="href && href !== '#' ? '_blank' : undefined"
     :to="item.to"
-    :active-class="`primary ${!isDark ? 'black' : 'white'}--text`"
+    flat
+    color="info"
   >
     <v-list-item-icon
       v-if="text"

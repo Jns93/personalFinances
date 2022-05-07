@@ -24,6 +24,7 @@ import VueSweetalert2 from 'vue-sweetalert2'
 // import VeeValidate from 'vee-validate';
 import Notifications from 'vue-notification'
 import money from  'vuejs-money'
+import axios from 'axios'
 
 Vue.config.productionTip = false
 
@@ -42,6 +43,7 @@ Vue.use(Notifications)
 
 
 new Vue({
+  axios,
   router,
   store,
   vuetify,

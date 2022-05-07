@@ -54,10 +54,12 @@ const router = new Router({
           name: 'Despesas',
           path: 'despesas',
           component: () => import('@/views/components/pages/Expenses'),
-          // meta: {
-          //   title: 'Personal Finances - Despesas',
-          //   authOnly: true }
-          // },
+          meta: { authOnly: true }
+        },
+        {
+          name: 'Despesas recorrentes',
+          path: 'recorrentes',
+          component: () => import('@/views/components/pages/RecurringExpenses'),
           meta: { authOnly: true }
         },
       ],

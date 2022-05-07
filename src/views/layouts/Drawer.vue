@@ -12,6 +12,8 @@
     v-bind="$attrs"
     disable-route-watcher
     style="box-shadow: 0.8px 1px 3px black;"
+    overlay-color="primary"
+    :mini-variant="mini-bar"
   >
     <template v-slot:img="props">
       <v-img
@@ -22,21 +24,8 @@
 
 
     <v-list
-      dense
-      nav
     >
       <v-list-item>
-        <v-list-item-avatar
-          class="align-self-center"
-          color="white"
-          contain
-        >
-          <v-img
-            :src="require('@/assets/Finanças-pessoais.jpg')"
-            max-height="40"
-          />
-        </v-list-item-avatar>
-
       <v-list-item-content>
           <v-spacer></v-spacer>
           <v-list-item-title
@@ -58,8 +47,9 @@
           v-if="item.children"
           :key="`group-${i}`"
           :item="item"
+          color="purple"
         >
-          <!--  -->
+
         </base-item-group>
 
         <base-item
@@ -87,20 +77,20 @@
     props: {
       expandOnHover: {
         type: Boolean,
-        default: false,
+        default: true,
       },
     },
 
     data: () => ({
       items: [
         {
-          icon: 'mdi-view-dashboard',
           title: 'dashboard',
+          icon: 'mdi-view-dashboard',
           to: '/dashboard',
         },
         {
-          icon: 'mdi-arrow-top-right',
           title: 'Receitas',
+          icon: 'mdi-arrow-top-right',
           to: '/receitas',
         },
         {
@@ -111,23 +101,13 @@
         {
           title: 'Despesas recorrentes',
           icon: 'mdi-chart-bubble',
-          to: '/components/icons',
+          to: '/recorrentes',
         },
         {
           title: 'Categorias',
           icon: 'mdi-format-font',
           to: '/categories',
         },
-        // {
-        //   title: 'Relatórios',
-        //   icon: 'mdi-map-marker',
-        //   to: '/maps/google-maps',
-        // },
-        // {
-        //   title: 'notifications',
-        //   icon: 'mdi-bell',
-        //   to: '/components/notifications',
-        // },
       ],
     }),
 
@@ -146,8 +126,8 @@
       },
       profile () {
         return {
-          avatar: true,
-          title: 'Finanças pessoais',
+          avatar: false,
+          title: '',
         }
       },
     },
@@ -177,7 +157,8 @@
         justify-content: center
         text-align: center
         width: 20px
-        color: white
+        color: success
+
 
         +ltr()
           margin-right: 24px
@@ -211,6 +192,7 @@
         .v-list-item__icon--text
           margin-top: 19px
           order: 0
+
 
         .v-list-group__header__prepend-icon
           order: 2
