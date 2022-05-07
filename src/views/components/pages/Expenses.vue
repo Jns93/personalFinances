@@ -1,7 +1,7 @@
 <template>
   <v-container id="despesas" fluid tag="section" style="height: 95%; background: #FAFAFA" >
     <v-row justify="center">
-      <v-btn class="mr-5" icon @click.prevent="prev">
+      <v-btn class="mr-5" dark color="grey" icon @click.prevent="prev">
         <v-icon large> mdi-chevron-left </v-icon>
       </v-btn>
       <h2
@@ -11,7 +11,7 @@
       >
         {{ item[month - 1].name }} {{ year }}
       </h2>
-      <v-btn class="ml-5" icon @click.prevent="next">
+      <v-btn class="ml-5" dark color="grey" icon @click.prevent="next">
         <v-icon large> mdi-chevron-right </v-icon>
       </v-btn>
     </v-row>

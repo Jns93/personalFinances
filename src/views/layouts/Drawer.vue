@@ -3,17 +3,14 @@
     id="core-navigation-drawer"
     v-model="drawer"
     :dark="barColor !== 'rgba(228, 226, 226, 1), rgba(255, 255, 255, 0.7)'"
-    :expand-on-hover="expandOnHover"
+    expand-on-hover
     :right="$vuetify.rtl"
-    mobile-breakpoint="960"
     :src="barImage"
     app
-    width="260"
     v-bind="$attrs"
-    disable-route-watcher
     style="box-shadow: 0.8px 1px 3px black;"
-    overlay-color="primary"
-    :mini-variant="mini-bar"
+    mini-variant-width
+    mini-variant
   >
     <template v-slot:img="props">
       <v-img

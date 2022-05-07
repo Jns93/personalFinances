@@ -3,7 +3,7 @@
     id="dashboard"
     fluid
     tag="section"
-    style="height: 90%; background: #fafafa; vertical-align: middle"
+    style="height: 90%; background: #fafafa; vertical-align: middle; width: 90%"
   >
       <v-container
         v-show="loading"
@@ -24,6 +24,7 @@
       </v-container>
     <!-- INDICADORES DO MÊS -->
     <indicators-month v-show="!loading"></indicators-month>
+    <charts v-show="!loading"></charts>
 
     <!-- INDICADORES DO ANO E AVISOS-->
     <!-- <p class="font-weight-thin mb-0">Indicadores do ano</p>
@@ -177,11 +178,13 @@ import { VMoney } from "v-money";
 import { mapActions, mapState, mapMutations, mapGetters } from "vuex";
 import moment from "moment";
 import IndicatorsMonth from './Dashboard/IndicatorsMonth.vue'
+import Charts from './Dashboard/Charts.vue'
 
 export default {
   // name: 'DashboardDashboard',
   components: {
     'indicators-month': IndicatorsMonth,
+    'charts': Charts
    },
   data() {
     return {

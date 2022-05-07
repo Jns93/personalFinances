@@ -6,7 +6,7 @@
     style="height: 90%; background: #fafafa"
   >
     <v-row justify="center">
-      <v-btn class="mr-5" icon @click.prevent="prevControlMonth">
+      <v-btn class="mr-5" dark color="grey" icon @click.prevent="prevControlMonth">
         <v-icon large> mdi-chevron-left </v-icon>
       </v-btn>
       <h2
@@ -16,7 +16,7 @@
       >
         {{ item[month - 1].name }} {{ year }}
       </h2>
-      <v-btn class="ml-5" icon @click.prevent="nextControlMonth">
+      <v-btn class="ml-5" dark color="grey" icon @click.prevent="nextControlMonth">
         <v-icon large> mdi-chevron-right </v-icon>
       </v-btn>
     </v-row>

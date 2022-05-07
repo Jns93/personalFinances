@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main style="background: #fafafa">
-      <v-container flud>
+      <v-container fluid>
         <router-view />
       </v-container>
     </v-main>
