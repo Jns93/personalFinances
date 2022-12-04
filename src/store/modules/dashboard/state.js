@@ -65,7 +65,7 @@ export default {
   balanceGoal: null,
   averageIncomes: null,
   averageExpenses: null,
-  averagePercentOfSaving: null,
+  averagePercentOfSavings: null,
   incomesYearChart: null,
 
   charts: {

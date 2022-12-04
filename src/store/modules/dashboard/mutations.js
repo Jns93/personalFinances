@@ -8,6 +8,7 @@ export default {
     state.balanceGoal = indicators.balanceGoal
     state.averageIncomes = indicators.averageIncomes
     state.averageExpenses = indicators.averageExpenses
+    state.averagePercentOfSavings = indicators.averagePercentOfSavings
   },
 
   SET_TOTAL_AMOUNT_INCOMES_IN_STATE (state, totalIncomesAmount) {

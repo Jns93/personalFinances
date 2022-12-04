@@ -64,7 +64,7 @@
             title="Percentual econômico"
             :value="percentOfSavings + '%'"
             sub-icon="mdi-information-variant"
-            :sub-text="'Percentual econômico médio: ' + percentOfSavings + '%'"
+            :sub-text="'Percentual econômico médio do ano: ' +  averagePercentOfSavings + '%'"
           />
         </v-col>
 
@@ -112,6 +112,7 @@ export default {
       balanceGoal: "balanceGoal",
       averageIncomes: "averageIncomes",
       averageExpenses: "averageExpenses",
+      averagePercentOfSavings: "averagePercentOfSavings",
     }),
     me() {
       return this.$store.getters.me
