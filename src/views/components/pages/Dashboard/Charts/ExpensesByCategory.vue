@@ -89,8 +89,8 @@ export default {
   data() {
     return {
       isLoading: false,
-      month: 1,
-      year: 2021,
+      // month: 1,
+      // year: 2021,
       headers: [
         {
           text: 'Nome',
@@ -148,6 +148,8 @@ export default {
   computed: {
     ...mapGetters({
       months: "months",
+      month: "month",
+      year: "year",
       expensesByCategoryChart: "expensesByCategoryChart",
     }),
     me() {
@@ -177,24 +179,24 @@ export default {
 
     setDateToday() {
       const date = new Date();
-      this.year = date.getFullYear();
-      this.month = date.getMonth() + 1;
+      // this.year = date.getFullYear();
+      // this.month = date.getMonth() + 1;
     },
 
-    prev() {
-      this.month--;
-      if (this.month === 0) {
-        this.month = 12;
-        this.year--;
-      }
-    },
-    next() {
-      this.month++;
-      if (this.month === 13) {
-        this.month = 1;
-        this.year++;
-      }
-    },
+    // prev() {
+    //   this.month--;
+    //   if (this.month === 0) {
+    //     this.month = 12;
+    //     this.year--;
+    //   }
+    // },
+    // next() {
+    //   this.month++;
+    //   if (this.month === 13) {
+    //     this.month = 1;
+    //     this.year++;
+    //   }
+    // },
     formatDateYearMonthFromApi() {
       var date = moment(this.year + "-" + this.month).format("YYYY-MM");
       return date;
@@ -209,7 +211,6 @@ export default {
           userId: this.me.id,
           due_date: date,
         };
-
         this.getExpensesByCategoryChartBar(params)
           .then((res) => {})
           .finally(() => {
@@ -219,10 +220,14 @@ export default {
     },
   },
   created() {
-    this.setDateToday();
+    // this.setDateToday();
     this.getChartByCategory();
   },
-  watch: {},
+  watch: {
+    month() {
+      this.getChartByCategory();
+    }
+  },
 };
 </script>
 

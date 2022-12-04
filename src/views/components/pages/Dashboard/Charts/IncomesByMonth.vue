@@ -100,13 +100,13 @@ export default {
       chartOptions: {
         responsive: true,
         maintainAspectRatio: false,
-        borderColor: ["rgba(255, 255, 255, 0.4)"],
+        borderColor: ["rgba(0, 255, 0, 0.4)"],
         plugins: {
           legend: {
             display: false,
           },
         },
-        pointBackgroundColor: ["rgba(255, 255, 255, 0.4)"],
+        pointBackgroundColor: ["rgba(0, 255, 0, 0.4)"],
         pointHitRadius: 40,
         scales: {
           x: {
