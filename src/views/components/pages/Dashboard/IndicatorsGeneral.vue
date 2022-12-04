@@ -1,33 +1,13 @@
 <template>
-  <div>
-    <!-- CONTROLES DE DATA -->
-    <div>
-      <v-row justify="center">
-        <v-btn class="mr-5" dark color="grey" icon @click.prevent="prev">
-          <v-icon large>mdi-chevron-left</v-icon>
-        </v-btn>
-        <h2
-          class="font-weight-regular mt-1"
-          v-for="item in months"
-          :key="item.id"
-        >
-          {{ item[month - 1].name }} {{ year }}
-        </h2>
-        <v-btn class="ml-5" dark color="grey" icon @click.prevent="next">
-          <v-icon large> mdi-chevron-right </v-icon>
-        </v-btn>
-      </v-row>
-    </div>
-    <!-- INDICADORES DO MES -->
     <div v-if="!loading">
-      <p class="font-weight-thin mb-0 mt-6">Indicadores do mês</p>
+      <p class="font-weight-thin mb-0 mt-6">Indicadores gerais</p>
 
       <v-row>
         <v-col cols="12" sm="6" lg="3">
           <base-material-stats-card
-            color="green"
+            color="indigo"
             icon="mdi-arrow-top-right"
-            title="Receita"
+            title="Despesas recorrentes"
             :value="applyFilterVmoney(totalIncomes)"
             sub-icon="mdi-information-variant"
             :sub-text="
@@ -45,34 +25,34 @@
 
         <v-col cols="12" sm="6" lg="3">
           <base-material-stats-card
-            color="red"
+            color="indigo"
             icon="mdi-arrow-bottom-left"
-            title="Despesas"
+            title="Renda recorrente"
             :value="applyFilterVmoney(totalExpenses)"
             :disabled="loading"
             sub-icon="mdi-information-variant"
             :sub-text="
-              'Média de despesas do ano: ' + applyFilterVmoney(averageExpenses)
+              'Média de despesas do ano: ' + applyFilterVmoney(totalExpenses)
             "
           />
         </v-col>
 
         <v-col cols="12" sm="6" lg="3">
           <base-material-stats-card
-            color="yellow"
+            color="indigo"
             icon="mdi-sack-percent"
-            title="Percentual econômico"
+            title="Despesas essenciais"
             :value="percentOfSavings + '%'"
             sub-icon="mdi-information-variant"
-            :sub-text="'Percentual econômico médio: ' + percentOfSavings + '%'"
+            :sub-text="'Percentual sob a sua renda: ' + percentOfSavings + '%'"
           />
         </v-col>
 
         <v-col cols="12" sm="6" lg="3">
           <base-material-stats-card
-            color="info"
+            color="indigo"
             icon="mdi-currency-usd"
-            title="Saldo"
+            title="Saldo do ano"
             :value="applyFilterVmoney(balance)"
             sub-icon="mdi-bullseye-arrow"
             :sub-text="
@@ -84,7 +64,6 @@
         </v-col>
       </v-row>
     </div>
-  </div>
 </template>
 
 <script>
@@ -111,7 +90,6 @@ export default {
       balance: "balance",
       balanceGoal: "balanceGoal",
       averageIncomes: "averageIncomes",
-      averageExpenses: "averageExpenses",
     }),
     me() {
       return this.$store.getters.me
@@ -148,6 +126,7 @@ export default {
     },
 
     applyFilterVmoney(value) {
+      console.log("entrou no apply =>", value);
       return this.$options.filters.money(value);
     },
 

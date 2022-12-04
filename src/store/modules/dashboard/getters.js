@@ -46,5 +46,17 @@ export default {
 
   incomesToBeDue: (state) => {
     return state.incomesToBeDue
+  },
+
+  expensesByCategoryChart: (state) => {
+    return state.charts.expensesByCategory;
+  },
+
+  expensesByMonthChart: (state) => {
+    return state.charts.expensesByMonth;
+  },
+
+  incomesByMonthChart: (state) => {
+    return state.charts.incomesByMonth;
   }
 }

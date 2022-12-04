@@ -23,6 +23,42 @@ export default {
     return Vue.prototype.$http('/dashboard/indicators-month', { params, headers })
                         .then(response => commit('SET_INDICATORS_MONTH', response.data))
   },
+
+    getExpensesByCategoryChartBar ({ commit }, params) {
+    const token = localStorage.getItem(TOKEN_NAME)
+    const headers = {
+      Authorization: `Bearer ${token}`
+    }
+    return Vue.prototype.$http(`/dashboard/charts/expenses/by-category`, { params, headers })
+                        .then(response => {
+                          commit('SET_EXPENSES_BY_CATEGORY_CHART', response.data);
+                        })
+                        .finally(() => {});
+  },
+
+    getExpensesByMonthChartBar ({ commit }, params) {
+    const token = localStorage.getItem(TOKEN_NAME)
+    const headers = {
+      Authorization: `Bearer ${token}`
+    }
+    return Vue.prototype.$http(`/dashboard/charts/expenses/by-month`, { params, headers })
+                        .then(response => {
+                          commit('SET_EXPENSES_BY_MONTH_CHART', response.data)
+                        })
+                        .finally(() => {});
+  },
+
+    getIncomesByMonthChartBar ({ commit }, params) {
+    const token = localStorage.getItem(TOKEN_NAME)
+    const headers = {
+      Authorization: `Bearer ${token}`
+    }
+    return Vue.prototype.$http(`/dashboard/charts/incomes/by-month`, { params, headers })
+                        .then(response => {
+                          commit('SET_INCOMES_BY_MONTH_CHART', response.data)
+                        })
+                        .finally(() => {});
+  },
   // getTotalIncomesByMonth ({ commit }, params) {
   //   commit('SET_PRELOADER', true)
 

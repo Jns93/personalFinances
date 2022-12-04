@@ -52,7 +52,7 @@
             :disabled="loading"
             sub-icon="mdi-information-variant"
             :sub-text="
-              'Média de despesas do ano: ' + applyFilterVmoney(averageExpenses)
+              'Média de despesas do ano: ' + applyFilterVmoney(totalExpenses)
             "
           />
         </v-col>
@@ -111,7 +111,6 @@ export default {
       balance: "balance",
       balanceGoal: "balanceGoal",
       averageIncomes: "averageIncomes",
-      averageExpenses: "averageExpenses",
     }),
     me() {
       return this.$store.getters.me
@@ -148,6 +147,7 @@ export default {
     },
 
     applyFilterVmoney(value) {
+      console.log("entrou no apply =>", value);
       return this.$options.filters.money(value);
     },
 

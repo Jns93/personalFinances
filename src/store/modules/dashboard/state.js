@@ -66,5 +66,20 @@ export default {
   averageIncomes: null,
   averageExpenses: null,
   averagePercentOfSaving: null,
-  incomesYearChart: null
+  incomesYearChart: null,
+
+  charts: {
+    expensesByCategory: {
+      labels: [],
+      values: []
+    },
+    expensesByMonth: {
+      labels: [],
+      values: []
+    },
+    incomesByMonth: {
+      labels: [],
+      values: []
+    },
+  },
 }

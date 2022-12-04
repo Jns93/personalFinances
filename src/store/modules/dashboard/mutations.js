@@ -7,6 +7,7 @@ export default {
     state.percentOfSavings = indicators.percentOfSavings
     state.balanceGoal = indicators.balanceGoal
     state.averageIncomes = indicators.averageIncomes
+    state.averageExpenses = indicators.averageExpenses
   },
 
   SET_TOTAL_AMOUNT_INCOMES_IN_STATE (state, totalIncomesAmount) {
@@ -90,4 +91,112 @@ export default {
     })
   },
 
+  SET_EXPENSES_BY_CATEGORY_CHART (state, expenses) {
+    state.charts.expensesByCategory.labels = expenses.map(function(item) {
+      let label = item.category.match(/.{1,8}/g);
+      return label[0];
+    });
+    state.charts.expensesByCategory.values = expenses.map(function(item) {
+      return parseFloat(item.amount)
+    });
+  },
+
+
+  SET_EXPENSES_BY_MONTH_CHART (state, expenses) {
+    state.charts.expensesByMonth.labels = expenses.map(function(item) {
+      let month = '';
+      switch (item.month) {
+        case 1:
+          month = 'Jan';
+          break;
+        case 2:
+          month = 'Fev';
+          break;
+        case 3:
+          month = 'Mar';
+          break;
+        case 4:
+          month = 'Abr';
+          break;
+        case 5:
+          month = 'Mai';
+          break;
+        case 6:
+          month = 'Jun';
+          break;
+        case 7:
+          month = 'Jul';
+          break;
+        case 8:
+          month = 'Ago';
+          break;
+        case 9:
+          month = 'Set';
+          break;
+        case 10:
+          month = 'Out';
+          break;
+        case 11:
+          month = 'Nov';
+          break;
+        case 12:
+          month = 'Dez';
+          break;
+      }
+      return month;
+    });
+
+    state.charts.expensesByMonth.values = expenses.map(function(item) {
+      return parseFloat(item.amount)
+    });
+  },
+
+  SET_INCOMES_BY_MONTH_CHART (state, incomes) {
+    state.charts.incomesByMonth.labels = incomes.map(function(item) {
+      let month = '';
+      switch (item.month) {
+        case 1:
+          month = 'Jan';
+          break;
+        case 2:
+          month = 'Fev';
+          break;
+        case 3:
+          month = 'Mar';
+          break;
+        case 4:
+          month = 'Abr';
+          break;
+        case 5:
+          month = 'Mai';
+          break;
+        case 6:
+          month = 'Jun';
+          break;
+        case 7:
+          month = 'Jul';
+          break;
+        case 8:
+          month = 'Ago';
+          break;
+        case 9:
+          month = 'Set';
+          break;
+        case 10:
+          month = 'Out';
+          break;
+        case 11:
+          month = 'Nov';
+          break;
+        case 12:
+          month = 'Dez';
+          break;
+      }
+      return month;
+    });
+
+    state.charts.incomesByMonth.values = incomes.map(function(item) {
+      return parseFloat(item.amount)
+    });
+  }
 }

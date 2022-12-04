@@ -47,7 +47,7 @@ export default {
                                     localStorage.setItem(TOKEN_NAME, token)
                                     localStorage.setItem("auth", "true")
 
-                                    dispatch('getMe') //chamando a action abaixo
+                                   dispatch('getMe') //chamando a action abaixo
                                   })
     },
 

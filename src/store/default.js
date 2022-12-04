@@ -20,6 +20,8 @@ export const state = {
       { id: 12, name: 'Dezembro' },
     ],
   },
+  month: 1,
+  year: 2022,
 }
 
 export const mutations = {
@@ -39,6 +41,26 @@ export const mutations = {
   SET_TEXT_PRELOADER (state, text) {
     state.textpreloader = text
   },
+
+  PREV_DATE (state, payload) {
+    state.month--;
+    if (state.month === 0) {
+      state.month = 12;
+      state.year--;
+    }
+  },
+  NEXT_DATE (state, payload) {
+    state.month++;
+    if (state.month === 13) {
+      state.month = 1;
+      state.year++;
+    }
+  },
+  SET_DATE_TODAY(state) {
+    const date = new Date();
+    state.year = date.getFullYear();
+    state.month = date.getMonth() + 1;
+  },
 }
 
 export const actions = {
@@ -49,4 +71,10 @@ export const getters = {
   months: (state) => {
     return state.months
   },
+  month: (state) => {
+    return state.month
+  },
+  year: (state) => {
+    return state.year
+  }
 }
